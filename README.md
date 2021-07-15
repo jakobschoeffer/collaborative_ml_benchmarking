@@ -1,1 +1,1 @@
-# ml_exchange_benchmarking
+# collaborative_ml_benchmarking
