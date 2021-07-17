@@ -1,0 +1,9 @@
+project:
+  data_url: https://bwdatadiss.kit.edu/dataitem/download/10917
+  data_path: fed_ml_horizontal/tmp/data
+  output_path: fed_ml_horizontal/outputs
+  log_path: fed_ml_horizontal/log
+  log_file_prefix: fed_ml_horizontal_log
+  steps:
+    - fed_ml_horizontal.etl.load_data.load_data
+    - fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios

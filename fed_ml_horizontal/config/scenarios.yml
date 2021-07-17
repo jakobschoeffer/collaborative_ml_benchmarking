@@ -1,0 +1,36 @@
+scenarios:
+  scenario_1:
+    total_share: 0.1
+    test_share: 0.2
+    valid_share: 0.05
+    num_reruns: 2
+    num_epochs: 3
+    clients:
+      client_1:
+        subtotal_no_pitting_share: 0.05
+        subtotal_pitting_share: 0.4
+      client_2:
+        subtotal_no_pitting_share: 0.4
+        subtotal_pitting_share: 0.1
+      # client_3:
+      #   subtotal_no_pitting_share: 0.05
+      #   subtotal_pitting_share: 0.05
+      # client_4:
+      #   subtotal_no_pitting_share: 0.1
+      #   subtotal_pitting_share: 0.05
+      # client_5:
+      #   subtotal_no_pitting_share: 0.4
+      #   subtotal_pitting_share: 0.4
+  scenario_2:
+    total_share: 0.1
+    test_share: 0.2
+    valid_share: 0.05
+    num_reruns: 2
+    num_epochs: 3
+    clients:
+      client_1:
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5
+      client_2:
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5

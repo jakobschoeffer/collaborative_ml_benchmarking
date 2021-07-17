@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+.venv
+fed_ml_horizontal/tmp/
+fed_ml_horizontal/tmp
+.mypy_cache
