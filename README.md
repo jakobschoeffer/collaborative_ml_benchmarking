@@ -36,7 +36,7 @@ Federated Machine Learning
 - Install python using pyenv
   - on linux (or WSL II):
     - run "curl https://pyenv.run | bash" to install pyenv
-    - as recommended in the installation output, add the three recommended lines as explained in console output to "~/.profile" e.g. using nano "~/.profile". The tree lines are:
+    - as recommended in the installation output, add the three recommended lines as explained in console output to "~/.profile" e.g. using nano. The tree lines are:
         ```
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
