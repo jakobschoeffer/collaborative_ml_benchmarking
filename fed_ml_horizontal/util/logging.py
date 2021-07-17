@@ -24,9 +24,7 @@ def setup_logging(config):
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s]  %(message)s")
     fileHandler = logging.FileHandler(
         os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "log",
+            config.project.log_path,
             f"{logfileprefix}_{timestamp}.log",
         )
     )

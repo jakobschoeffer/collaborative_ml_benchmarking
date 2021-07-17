@@ -44,6 +44,10 @@ Federated Machine Learning
         ```
     - run "source ~/.profile" to reload bashrc
     - before installing python, install build dependencies (build-dep) as specified in <https://devguide.python.org/setup/#linux>
+      - on debian or ubuntu, do the following:
+        - add "deb-src http://archive.ubuntu.com/ubuntu/ bionic main" to "/etc/apt/sources.list", e.g. by using "nano /etc/apt/sources.list"
+        - run "sudo apt-get update"
+        - run "sudo apt-get build-dep python3" (or maybe sudo apt-get build-dep python3.6)
     - run "pyenv install 3.8.6" to install python 3.8.6
     - run "pyenv local 3.8.6" to use python 3.8.6
 - Install poetry (<https://python-poetry.org/docs/basic-usage/>) (linux: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -)
