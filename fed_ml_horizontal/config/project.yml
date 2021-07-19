@@ -5,5 +5,5 @@ project:
   log_path: fed_ml_horizontal/log
   log_file_prefix: fed_ml_horizontal_log
   steps:
-    - fed_ml_horizontal.etl.load_data.load_data
+    # - fed_ml_horizontal.etl.load_data.load_data
     - fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios

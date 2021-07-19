@@ -49,7 +49,10 @@ def run_baseline_model(
         baseline_model.compile(
             optimizer="Adam",  # tf.keras.optimizers.Adam(learning_rate=0.0001), #tf.keras.optimizers.Adam(),
             loss=tf.keras.losses.BinaryCrossentropy(),
-            metrics=[tf.keras.metrics.BinaryAccuracy()],
+            metrics=[
+                tf.keras.metrics.BinaryAccuracy(),
+                tf.keras.metrics.AUC(name="auc"),
+            ],
         )
         history_baseline = baseline_model.fit(
             all_clients_train,

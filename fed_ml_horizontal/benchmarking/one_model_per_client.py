@@ -55,7 +55,10 @@ def run_one_model_per_client(
             client_model.compile(
                 optimizer="Adam",  # tf.keras.optimizers.Adam(),
                 loss=tf.keras.losses.BinaryCrossentropy(),
-                metrics=[tf.keras.metrics.BinaryAccuracy()],
+                metrics=[
+                    tf.keras.metrics.BinaryAccuracy(),
+                    tf.keras.metrics.AUC(name="auc"),
+                ],
             )
             history = client_model.fit(
                 train, validation_data=test, batch_size=None, epochs=num_epochs

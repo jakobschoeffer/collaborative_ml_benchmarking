@@ -1,0 +1,608 @@
+2021-07-19 10:53:52,548 [INFO ]  {'scenarios': {'scenario_1': {'total_share': 0.1, 'test_share': 0.2, 'valid_share': 0.05, 'num_reruns': 2, 'num_epochs': 3, 'clients': {'client_1': {'subtotal_no_pitting_share': 0.05, 'subtotal_pitting_share': 0.4}, 'client_2': {'subtotal_no_pitting_share': 0.4, 'subtotal_pitting_share': 0.1}}}, 'scenario_2': {'total_share': 0.1, 'test_share': 0.2, 'valid_share': 0.05, 'num_reruns': 2, 'num_epochs': 3, 'clients': {'client_1': {'subtotal_no_pitting_share': 0.5, 'subtotal_pitting_share': 0.5}, 'client_2': {'subtotal_no_pitting_share': 0.5, 'subtotal_pitting_share': 0.5}}}}, 'project': {'data_url': 'https://bwdatadiss.kit.edu/dataitem/download/10917', 'data_path': 'fed_ml_horizontal/tmp/data', 'output_path': 'fed_ml_horizontal/outputs', 'log_path': 'fed_ml_horizontal/log', 'log_file_prefix': 'fed_ml_horizontal_log', 'steps': ['fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios']}}
+2021-07-19 10:53:52,548 [INFO ]  Read config and wrote config to log file
+2021-07-19 10:53:52,548 [INFO ]  Running 1 steps from fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios to fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios
+2021-07-19 10:53:55,097 [INFO ]  Running scenario_1 with configuration {'total_share': 0.1, 'test_share': 0.2, 'valid_share': 0.05, 'num_reruns': 2, 'num_epochs': 3, 'clients': {'client_1': {'subtotal_no_pitting_share': 0.05, 'subtotal_pitting_share': 0.4}, 'client_2': {'subtotal_no_pitting_share': 0.4, 'subtotal_pitting_share': 0.1}}}. Output path: fed_ml_horizontal/outputs/HFL_KIT_PITTING_CLASS_20210719-105355/scenario_1_20210719-105355
+2021-07-19 10:53:55,281 [INFO ]  Start federated model
+2021-07-19 10:53:55,646 [INFO ]  Start run 1 out of 2 runs
+2021-07-19 10:54:04,742 [WARNI]  From /home/anhe/collaborative_ml_benchmarking/.venv/lib/python3.8/site-packages/tensorflow_federated/python/core/impl/compiler/tensorflow_computation_transformations.py:59: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+2021-07-19 10:54:19,488 [INFO ]  train: binary accuracy: 0.8175379037857056, loss: 0.483940064907074
+2021-07-19 10:54:21,724 [INFO ]  val: binary accuracy: 0.49839574098587036, loss: 0.6892315149307251
+2021-07-19 10:54:27,457 [INFO ]  train: binary accuracy: 0.8267046213150024, loss: 0.4751814007759094
+2021-07-19 10:54:27,968 [INFO ]  val: binary accuracy: 0.49049317836761475, loss: 0.6993196606636047
+2021-07-19 10:54:33,706 [INFO ]  train: binary accuracy: 0.8267046213150024, loss: 0.4782140851020813
+2021-07-19 10:54:34,242 [INFO ]  val: binary accuracy: 0.6316696405410767, loss: 0.688967227935791
+2021-07-19 10:54:34,605 [INFO ]  Start run 2 out of 2 runs
+2021-07-19 10:54:52,845 [INFO ]  train: binary accuracy: 0.8242045640945435, loss: 0.5622996091842651
+2021-07-19 10:54:54,972 [INFO ]  val: binary accuracy: 0.49129530787467957, loss: 0.7034731507301331
+2021-07-19 10:55:00,616 [INFO ]  train: binary accuracy: 0.8081439137458801, loss: 0.4899691939353943
+2021-07-19 10:55:01,171 [INFO ]  val: binary accuracy: 0.4991978704929352, loss: 0.6822265982627869
+2021-07-19 10:55:06,765 [INFO ]  train: binary accuracy: 0.8293939828872681, loss: 0.5361673831939697
+2021-07-19 10:55:07,296 [INFO ]  val: binary accuracy: 0.7297385931015015, loss: 0.6663442850112915
+2021-07-19 10:55:07,572 [INFO ]               metric train/val run epoch     value
+0   binary_accuracy     train   1     0  0.817538
+1               auc     train   1     0  0.847062
+2              loss     train   1     0  0.483940
+3   binary_accuracy       val   1     0  0.498396
+4               auc       val   1     0  0.661711
+5              loss       val   1     0  0.689232
+6   binary_accuracy     train   1     1  0.826705
+7               auc     train   1     1  0.851810
+8              loss     train   1     1  0.475181
+9   binary_accuracy       val   1     1  0.490493
+10              auc       val   1     1  0.574861
+11             loss       val   1     1  0.699320
+12  binary_accuracy     train   1     2  0.826705
+13              auc     train   1     2  0.845698
+14             loss     train   1     2  0.478214
+15  binary_accuracy       val   1     2  0.631670
+16              auc       val   1     2  0.679364
+17             loss       val   1     2  0.688967
+18  binary_accuracy     train   2     0  0.824205
+19              auc     train   2     0  0.840482
+20             loss     train   2     0  0.562300
+21  binary_accuracy       val   2     0  0.491295
+22              auc       val   2     0  0.466440
+23             loss       val   2     0  0.703473
+24  binary_accuracy     train   2     1  0.808144
+25              auc     train   2     1  0.858583
+26             loss     train   2     1  0.489969
+27  binary_accuracy       val   2     1  0.499198
+28              auc       val   2     1  0.749504
+29             loss       val   2     1  0.682227
+30  binary_accuracy     train   2     2  0.829394
+31              auc     train   2     2  0.858209
+32             loss     train   2     2  0.536167
+33  binary_accuracy       val   2     2  0.729739
+34              auc       val   2     2  0.764562
+35             loss       val   2     2  0.666344
+2021-07-19 10:55:07,607 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      0  0.843772  0.843772  0.840482  0.847062  0.004653
+1               auc     train      1  0.855196  0.855196  0.851810  0.858583  0.004790
+2               auc     train      2  0.851953  0.851953  0.845698  0.858209  0.008847
+3               auc       val      0  0.564075  0.564075  0.466440  0.661711  0.138077
+4               auc       val      1  0.662183  0.662183  0.574861  0.749504  0.123492
+5               auc       val      2  0.721963  0.721963  0.679364  0.764562  0.060244
+6   binary_accuracy     train      0  0.820871  0.820871  0.817538  0.824205  0.004714
+7   binary_accuracy     train      1  0.817424  0.817424  0.808144  0.826705  0.013124
+8   binary_accuracy     train      2  0.828049  0.828049  0.826705  0.829394  0.001902
+9   binary_accuracy       val      0  0.494846  0.494846  0.491295  0.498396  0.005021
+10  binary_accuracy       val      1  0.494846  0.494846  0.490493  0.499198  0.006155
+11  binary_accuracy       val      2  0.680704  0.680704  0.631670  0.729739  0.069345
+12             loss     train      0  0.523120  0.523120  0.483940  0.562300  0.055409
+13             loss     train      1  0.482575  0.482575  0.475181  0.489969  0.010457
+14             loss     train      2  0.507191  0.507191  0.478214  0.536167  0.040979
+15             loss       val      0  0.696352  0.696352  0.689232  0.703473  0.010070
+16             loss       val      1  0.690773  0.690773  0.682227  0.699320  0.012087
+17             loss       val      2  0.677656  0.677656  0.666344  0.688967  0.015997
+2021-07-19 10:55:08,710 [INFO ]  Finished federated model
+2021-07-19 10:55:08,710 [INFO ]  Start baseline model
+2021-07-19 10:55:08,808 [INFO ]  Start run 1 out of 2 runs
+2021-07-19 10:55:23,933 [INFO ]  Start run 2 out of 2 runs
+2021-07-19 10:55:38,240 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.717139
+1              loss     train   1     2  0.605255
+2   binary_accuracy     train   1     1  0.565891
+3   binary_accuracy     train   1     2  0.693798
+4               auc     train   1     1  0.579692
+5               auc     train   1     2  0.747436
+6              loss       val   1     1  0.641909
+7              loss       val   1     2  0.555028
+8   binary_accuracy       val   1     1  0.519417
+9   binary_accuracy       val   1     2  0.737864
+10              auc       val   1     1  0.834655
+11              auc       val   1     2  0.829463
+12             loss     train   2     1  0.714462
+13             loss     train   2     2  0.693801
+14  binary_accuracy     train   2     1  0.543928
+15  binary_accuracy     train   2     2  0.514212
+16              auc     train   2     1  0.565402
+17              auc     train   2     2  0.513628
+18             loss       val   2     1  0.715073
+19             loss       val   2     2  0.683977
+20  binary_accuracy       val   2     1  0.480583
+21  binary_accuracy       val   2     2  0.519417
+22              auc       val   2     1  0.539979
+23              auc       val   2     2  0.839092
+2021-07-19 10:55:38,270 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.572547  0.572547  0.565402  0.579692  0.010105
+1               auc     train      2  0.630532  0.630532  0.513628  0.747436  0.165327
+2               auc       val      1  0.687317  0.687317  0.539979  0.834655  0.208367
+3               auc       val      2  0.834277  0.834277  0.829463  0.839092  0.006809
+4   binary_accuracy     train      1  0.554910  0.554910  0.543928  0.565891  0.015531
+5   binary_accuracy     train      2  0.604005  0.604005  0.514212  0.693798  0.126987
+6   binary_accuracy       val      1  0.500000  0.500000  0.480583  0.519417  0.027460
+7   binary_accuracy       val      2  0.628641  0.628641  0.519417  0.737864  0.154465
+8              loss     train      1  0.715801  0.715801  0.714462  0.717139  0.001893
+9              loss     train      2  0.649528  0.649528  0.605255  0.693801  0.062611
+10             loss       val      1  0.678491  0.678491  0.641909  0.715073  0.051735
+11             loss       val      2  0.619502  0.619502  0.555028  0.683977  0.091181
+2021-07-19 10:55:39,227 [INFO ]  Finished baseline model
+2021-07-19 10:55:39,227 [INFO ]  Start one model per client
+2021-07-19 10:55:39,230 [INFO ]  Training client_1 in 'one model per client' scenario, run number 1 of 2
+2021-07-19 10:55:48,338 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.581469
+1              loss     train   1     2  0.330645
+2   binary_accuracy     train   1     1  0.887052
+3   binary_accuracy     train   1     2  0.887052
+4               auc     train   1     1  0.459135
+5               auc     train   1     2  0.692357
+6              loss       val   1     1  0.356552
+7              loss       val   1     2  0.311463
+8   binary_accuracy       val   1     1  0.886598
+9   binary_accuracy       val   1     2  0.886598
+10              auc       val   1     1  0.492072
+11              auc       val   1     2  0.937104
+2021-07-19 10:55:48,367 [INFO ]               metric train/val  epoch      mean    median       min       max  std
+0               auc     train      1  0.459135  0.459135  0.459135  0.459135  NaN
+1               auc     train      2  0.692357  0.692357  0.692357  0.692357  NaN
+2               auc       val      1  0.492072  0.492072  0.492072  0.492072  NaN
+3               auc       val      2  0.937104  0.937104  0.937104  0.937104  NaN
+4   binary_accuracy     train      1  0.887052  0.887052  0.887052  0.887052  NaN
+5   binary_accuracy     train      2  0.887052  0.887052  0.887052  0.887052  NaN
+6   binary_accuracy       val      1  0.886598  0.886598  0.886598  0.886598  NaN
+7   binary_accuracy       val      2  0.886598  0.886598  0.886598  0.886598  NaN
+8              loss     train      1  0.581469  0.581469  0.581469  0.581469  NaN
+9              loss     train      2  0.330645  0.330645  0.330645  0.330645  NaN
+10             loss       val      1  0.356552  0.356552  0.356552  0.356552  NaN
+11             loss       val      2  0.311463  0.311463  0.311463  0.311463  NaN
+2021-07-19 10:55:49,294 [INFO ]  Training client_2 in 'one model per client' scenario, run number 1 of 2
+2021-07-19 10:56:00,212 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.581469
+1              loss     train   1     2  0.330645
+2   binary_accuracy     train   1     1  0.887052
+3   binary_accuracy     train   1     2  0.887052
+4               auc     train   1     1  0.459135
+5               auc     train   1     2  0.692357
+6              loss       val   1     1  0.356552
+7              loss       val   1     2  0.311463
+8   binary_accuracy       val   1     1  0.886598
+9   binary_accuracy       val   1     2  0.886598
+10              auc       val   1     1  0.492072
+11              auc       val   1     2  0.937104
+12             loss     train   1     1  0.534934
+13             loss     train   1     2  0.488929
+14  binary_accuracy     train   1     1  0.805353
+15  binary_accuracy     train   1     2  0.807786
+16              auc     train   1     1  0.538501
+17              auc     train   1     2  0.578437
+18             loss       val   1     1  0.521148
+19             loss       val   1     2  0.477318
+20  binary_accuracy       val   1     1  0.807339
+21  binary_accuracy       val   1     2  0.816514
+22              auc       val   1     1  0.454545
+23              auc       val   1     2  0.667208
+2021-07-19 10:56:00,243 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.498818  0.498818  0.459135  0.538501  0.056120
+1               auc     train      2  0.635397  0.635397  0.578437  0.692357  0.080554
+2               auc       val      1  0.473309  0.473309  0.454545  0.492072  0.026535
+3               auc       val      2  0.802156  0.802156  0.667208  0.937104  0.190845
+4   binary_accuracy     train      1  0.846203  0.846203  0.805353  0.887052  0.057770
+5   binary_accuracy     train      2  0.847419  0.847419  0.807786  0.887052  0.056050
+6   binary_accuracy       val      1  0.846969  0.846969  0.807339  0.886598  0.056044
+7   binary_accuracy       val      2  0.851556  0.851556  0.816514  0.886598  0.049557
+8              loss     train      1  0.558201  0.558201  0.534934  0.581469  0.032905
+9              loss     train      2  0.409787  0.409787  0.330645  0.488929  0.111924
+10             loss       val      1  0.438850  0.438850  0.356552  0.521148  0.116387
+11             loss       val      2  0.394391  0.394391  0.311463  0.477318  0.117277
+2021-07-19 10:56:01,251 [INFO ]  Plotting history for client_1
+2021-07-19 10:56:01,484 [INFO ]  Plotting history for client_2
+2021-07-19 10:56:01,947 [INFO ]  Training client_1 in 'one model per client' scenario, run number 2 of 2
+2021-07-19 10:56:11,852 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.581469
+1              loss     train   1     2  0.330645
+2   binary_accuracy     train   1     1  0.887052
+3   binary_accuracy     train   1     2  0.887052
+4               auc     train   1     1  0.459135
+5               auc     train   1     2  0.692357
+6              loss       val   1     1  0.356552
+7              loss       val   1     2  0.311463
+8   binary_accuracy       val   1     1  0.886598
+9   binary_accuracy       val   1     2  0.886598
+10              auc       val   1     1  0.492072
+11              auc       val   1     2  0.937104
+12             loss     train   1     1  0.534934
+13             loss     train   1     2  0.488929
+14  binary_accuracy     train   1     1  0.805353
+15  binary_accuracy     train   1     2  0.807786
+16              auc     train   1     1  0.538501
+17              auc     train   1     2  0.578437
+18             loss       val   1     1  0.521148
+19             loss       val   1     2  0.477318
+20  binary_accuracy       val   1     1  0.807339
+21  binary_accuracy       val   1     2  0.816514
+22              auc       val   1     1  0.454545
+23              auc       val   1     2  0.667208
+24             loss     train   2     1  0.529816
+25             loss     train   2     2  0.367366
+26  binary_accuracy     train   2     1  0.887052
+27  binary_accuracy     train   2     2  0.887052
+28              auc     train   2     1  0.597334
+29              auc     train   2     2  0.600629
+30             loss       val   2     1  0.438276
+31             loss       val   2     2  0.347395
+32  binary_accuracy       val   2     1  0.886598
+33  binary_accuracy       val   2     2  0.886598
+34              auc       val   2     1  0.766913
+35              auc       val   2     2  0.899049
+2021-07-19 10:56:11,906 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.531656  0.538501  0.459135  0.597334  0.069353
+1               auc     train      2  0.623807  0.600629  0.578437  0.692357  0.060394
+2               auc       val      1  0.571177  0.492072  0.454545  0.766913  0.170548
+3               auc       val      2  0.834453  0.899049  0.667208  0.937104  0.146083
+4   binary_accuracy     train      1  0.859819  0.887052  0.805353  0.887052  0.047169
+5   binary_accuracy     train      2  0.860630  0.887052  0.807786  0.887052  0.045765
+6   binary_accuracy       val      1  0.860178  0.886598  0.807339  0.886598  0.045760
+7   binary_accuracy       val      2  0.863237  0.886598  0.816514  0.886598  0.040463
+8              loss     train      1  0.548740  0.534934  0.529816  0.581469  0.028460
+9              loss     train      2  0.395646  0.367366  0.330645  0.488929  0.082845
+10             loss       val      1  0.438658  0.438276  0.356552  0.521148  0.082299
+11             loss       val      2  0.378726  0.347395  0.311463  0.477318  0.087254
+2021-07-19 10:56:13,357 [INFO ]  Training client_2 in 'one model per client' scenario, run number 2 of 2
+2021-07-19 10:56:24,613 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.581469
+1              loss     train   1     2  0.330645
+2   binary_accuracy     train   1     1  0.887052
+3   binary_accuracy     train   1     2  0.887052
+4               auc     train   1     1  0.459135
+5               auc     train   1     2  0.692357
+6              loss       val   1     1  0.356552
+7              loss       val   1     2  0.311463
+8   binary_accuracy       val   1     1  0.886598
+9   binary_accuracy       val   1     2  0.886598
+10              auc       val   1     1  0.492072
+11              auc       val   1     2  0.937104
+12             loss     train   1     1  0.534934
+13             loss     train   1     2  0.488929
+14  binary_accuracy     train   1     1  0.805353
+15  binary_accuracy     train   1     2  0.807786
+16              auc     train   1     1  0.538501
+17              auc     train   1     2  0.578437
+18             loss       val   1     1  0.521148
+19             loss       val   1     2  0.477318
+20  binary_accuracy       val   1     1  0.807339
+21  binary_accuracy       val   1     2  0.816514
+22              auc       val   1     1  0.454545
+23              auc       val   1     2  0.667208
+24             loss     train   2     1  0.529816
+25             loss     train   2     2  0.367366
+26  binary_accuracy     train   2     1  0.887052
+27  binary_accuracy     train   2     2  0.887052
+28              auc     train   2     1  0.597334
+29              auc     train   2     2  0.600629
+30             loss       val   2     1  0.438276
+31             loss       val   2     2  0.347395
+32  binary_accuracy       val   2     1  0.886598
+33  binary_accuracy       val   2     2  0.886598
+34              auc       val   2     1  0.766913
+35              auc       val   2     2  0.899049
+36             loss     train   2     1  0.570922
+37             loss     train   2     2  0.498153
+38  binary_accuracy     train   2     1  0.773723
+39  binary_accuracy     train   2     2  0.805353
+40              auc     train   2     1  0.460876
+41              auc     train   2     2  0.567674
+42             loss       val   2     1  0.517023
+43             loss       val   2     2  0.486043
+44  binary_accuracy       val   2     1  0.807339
+45  binary_accuracy       val   2     2  0.816514
+46              auc       val   2     1  0.450758
+47              auc       val   2     2  0.662067
+2021-07-19 10:56:24,642 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.513961  0.499688  0.459135  0.597334  0.066776
+1               auc     train      2  0.609774  0.589533  0.567674  0.692357  0.056739
+2               auc       val      1  0.541072  0.473309  0.450758  0.766913  0.151711
+3               auc       val      2  0.791357  0.783128  0.662067  0.937104  0.147160
+4   binary_accuracy     train      1  0.838295  0.846203  0.773723  0.887052  0.057762
+5   binary_accuracy     train      2  0.846811  0.847419  0.805353  0.887052  0.046478
+6   binary_accuracy       val      1  0.846969  0.846969  0.807339  0.886598  0.045760
+7   binary_accuracy       val      2  0.851556  0.851556  0.816514  0.886598  0.040463
+8              loss     train      1  0.554285  0.552928  0.529816  0.581469  0.025748
+9              loss     train      2  0.421273  0.428147  0.330645  0.498153  0.084867
+10             loss       val      1  0.458250  0.477649  0.356552  0.521148  0.077786
+11             loss       val      2  0.405555  0.412357  0.311463  0.486043  0.089189
+2021-07-19 10:56:25,585 [INFO ]  Plotting history for client_1
+2021-07-19 10:56:25,815 [INFO ]  Plotting history for client_2
+2021-07-19 10:56:26,045 [INFO ]  Finished one model per client
+2021-07-19 10:56:26,046 [INFO ]  Running scenario_2 with configuration {'total_share': 0.1, 'test_share': 0.2, 'valid_share': 0.05, 'num_reruns': 2, 'num_epochs': 3, 'clients': {'client_1': {'subtotal_no_pitting_share': 0.5, 'subtotal_pitting_share': 0.5}, 'client_2': {'subtotal_no_pitting_share': 0.5, 'subtotal_pitting_share': 0.5}}}. Output path: fed_ml_horizontal/outputs/HFL_KIT_PITTING_CLASS_20210719-105355/scenario_2_20210719-105626
+2021-07-19 10:56:26,170 [INFO ]  Start federated model
+2021-07-19 10:56:26,300 [INFO ]  Start run 1 out of 2 runs
+2021-07-19 10:56:46,381 [INFO ]  train: binary accuracy: 0.5684719681739807, loss: 0.7045572996139526
+2021-07-19 10:56:48,851 [INFO ]  val: binary accuracy: 0.7028074860572815, loss: 0.6621828079223633
+2021-07-19 10:56:59,434 [INFO ]  train: binary accuracy: 0.7316713929176331, loss: 0.5631504654884338
+2021-07-19 10:57:00,359 [INFO ]  val: binary accuracy: 0.7627004981040955, loss: 0.5338863134384155
+2021-07-19 10:57:10,771 [INFO ]  train: binary accuracy: 0.7963055968284607, loss: 0.46267372369766235
+2021-07-19 10:57:11,680 [INFO ]  val: binary accuracy: 0.843048095703125, loss: 0.41612982749938965
+2021-07-19 10:57:12,026 [INFO ]  Start run 2 out of 2 runs
+2021-07-19 10:57:33,287 [INFO ]  train: binary accuracy: 0.5676470994949341, loss: 0.7272293567657471
+2021-07-19 10:57:35,737 [INFO ]  val: binary accuracy: 0.7248663306236267, loss: 0.6772953271865845
+2021-07-19 10:57:46,132 [INFO ]  train: binary accuracy: 0.6923242211341858, loss: 0.5890387892723083
+2021-07-19 10:57:47,054 [INFO ]  val: binary accuracy: 0.7475936412811279, loss: 0.5228142142295837
+2021-07-19 10:57:57,366 [INFO ]  train: binary accuracy: 0.7881636023521423, loss: 0.47489237785339355
+2021-07-19 10:57:58,294 [INFO ]  val: binary accuracy: 0.8048128485679626, loss: 0.4349571466445923
+2021-07-19 10:57:58,632 [INFO ]               metric train/val run epoch     value
+0   binary_accuracy     train   1     0  0.568472
+1               auc     train   1     0  0.628657
+2              loss     train   1     0  0.704557
+3   binary_accuracy       val   1     0  0.702807
+4               auc       val   1     0  0.817215
+5              loss       val   1     0  0.662183
+6   binary_accuracy     train   1     1  0.731671
+7               auc     train   1     1  0.789290
+8              loss     train   1     1  0.563150
+9   binary_accuracy       val   1     1  0.762700
+10              auc       val   1     1  0.838530
+11             loss       val   1     1  0.533886
+12  binary_accuracy     train   1     2  0.796306
+13              auc     train   1     2  0.869493
+14             loss     train   1     2  0.462674
+15  binary_accuracy       val   1     2  0.843048
+16              auc       val   1     2  0.907785
+17             loss       val   1     2  0.416130
+18  binary_accuracy     train   2     0  0.567647
+19              auc     train   2     0  0.607938
+20             loss     train   2     0  0.727229
+21  binary_accuracy       val   2     0  0.724866
+22              auc       val   2     0  0.764305
+23             loss       val   2     0  0.677295
+24  binary_accuracy     train   2     1  0.692324
+25              auc     train   2     1  0.762800
+26             loss     train   2     1  0.589039
+27  binary_accuracy       val   2     1  0.747594
+28              auc       val   2     1  0.834494
+29             loss       val   2     1  0.522814
+30  binary_accuracy     train   2     2  0.788164
+31              auc     train   2     2  0.861454
+32             loss     train   2     2  0.474892
+33  binary_accuracy       val   2     2  0.804813
+34              auc       val   2     2  0.894477
+35             loss       val   2     2  0.434957
+2021-07-19 10:57:58,673 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      0  0.618298  0.618298  0.607938  0.628657  0.014650
+1               auc     train      1  0.776045  0.776045  0.762800  0.789290  0.018732
+2               auc     train      2  0.865473  0.865473  0.861454  0.869493  0.005684
+3               auc       val      0  0.790760  0.790760  0.764305  0.817215  0.037413
+4               auc       val      1  0.836512  0.836512  0.834494  0.838530  0.002854
+5               auc       val      2  0.901131  0.901131  0.894477  0.907785  0.009410
+6   binary_accuracy     train      0  0.568060  0.568060  0.567647  0.568472  0.000583
+7   binary_accuracy     train      1  0.711998  0.711998  0.692324  0.731671  0.027823
+8   binary_accuracy     train      2  0.792235  0.792235  0.788164  0.796306  0.005757
+9   binary_accuracy       val      0  0.713837  0.713837  0.702807  0.724866  0.015598
+10  binary_accuracy       val      1  0.755147  0.755147  0.747594  0.762700  0.010682
+11  binary_accuracy       val      2  0.823930  0.823930  0.804813  0.843048  0.027036
+12             loss     train      0  0.715893  0.715893  0.704557  0.727229  0.016032
+13             loss     train      1  0.576095  0.576095  0.563150  0.589039  0.018306
+14             loss     train      2  0.468783  0.468783  0.462674  0.474892  0.008640
+15             loss       val      0  0.669739  0.669739  0.662183  0.677295  0.010686
+16             loss       val      1  0.528350  0.528350  0.522814  0.533886  0.007829
+17             loss       val      2  0.425543  0.425543  0.416130  0.434957  0.013313
+2021-07-19 10:57:59,887 [INFO ]  Finished federated model
+2021-07-19 10:57:59,887 [INFO ]  Start baseline model
+2021-07-19 10:57:59,994 [INFO ]  Start run 1 out of 2 runs
+2021-07-19 10:58:37,484 [INFO ]  Start run 2 out of 2 runs
+2021-07-19 10:59:15,626 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.654256
+1              loss     train   1     2  0.425822
+2   binary_accuracy     train   1     1  0.629131
+3   binary_accuracy     train   1     2  0.825581
+4               auc     train   1     1  0.704975
+5               auc     train   1     2  0.888963
+6              loss       val   1     1  0.542275
+7              loss       val   1     2  0.389968
+8   binary_accuracy       val   1     1  0.764977
+9   binary_accuracy       val   1     2  0.838710
+10              auc       val   1     1  0.856893
+11              auc       val   1     2  0.922940
+12             loss     train   2     1  0.561970
+13             loss     train   2     2  0.371867
+14  binary_accuracy     train   2     1  0.716646
+15  binary_accuracy     train   2     2  0.840269
+16              auc     train   2     1  0.793331
+17              auc     train   2     2  0.916936
+18             loss       val   2     1  0.422845
+19             loss       val   2     2  0.379133
+20  binary_accuracy       val   2     1  0.790323
+21  binary_accuracy       val   2     2  0.850230
+22              auc       val   2     1  0.897111
+23              auc       val   2     2  0.923163
+2021-07-19 10:59:15,657 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.749153  0.749153  0.704975  0.793331  0.062477
+1               auc     train      2  0.902949  0.902949  0.888963  0.916936  0.019780
+2               auc       val      1  0.877002  0.877002  0.856893  0.897111  0.028439
+3               auc       val      2  0.923051  0.923051  0.922940  0.923163  0.000158
+4   binary_accuracy     train      1  0.672889  0.672889  0.629131  0.716646  0.061883
+5   binary_accuracy     train      2  0.832925  0.832925  0.825581  0.840269  0.010386
+6   binary_accuracy       val      1  0.777650  0.777650  0.764977  0.790323  0.017922
+7   binary_accuracy       val      2  0.844470  0.844470  0.838710  0.850230  0.008146
+8              loss     train      1  0.608113  0.608113  0.561970  0.654256  0.065256
+9              loss     train      2  0.398845  0.398845  0.371867  0.425822  0.038152
+10             loss       val      1  0.482560  0.482560  0.422845  0.542275  0.084450
+11             loss       val      2  0.384550  0.384550  0.379133  0.389968  0.007661
+2021-07-19 10:59:16,630 [INFO ]  Finished baseline model
+2021-07-19 10:59:16,631 [INFO ]  Start one model per client
+2021-07-19 10:59:16,634 [INFO ]  Training client_1 in 'one model per client' scenario, run number 1 of 2
+2021-07-19 10:59:32,441 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.688244
+1              loss     train   1     2  0.511885
+2   binary_accuracy     train   1     1  0.596083
+3   binary_accuracy     train   1     2  0.767442
+4               auc     train   1     1  0.626563
+5               auc     train   1     2  0.833558
+6              loss       val   1     1  0.573765
+7              loss       val   1     2  0.496436
+8   binary_accuracy       val   1     1  0.778802
+9   binary_accuracy       val   1     2  0.778802
+10              auc       val   1     1  0.828335
+11              auc       val   1     2  0.875149
+2021-07-19 10:59:32,469 [INFO ]               metric train/val  epoch      mean    median       min       max  std
+0               auc     train      1  0.626563  0.626563  0.626563  0.626563  NaN
+1               auc     train      2  0.833558  0.833558  0.833558  0.833558  NaN
+2               auc       val      1  0.828335  0.828335  0.828335  0.828335  NaN
+3               auc       val      2  0.875149  0.875149  0.875149  0.875149  NaN
+4   binary_accuracy     train      1  0.596083  0.596083  0.596083  0.596083  NaN
+5   binary_accuracy     train      2  0.767442  0.767442  0.767442  0.767442  NaN
+6   binary_accuracy       val      1  0.778802  0.778802  0.778802  0.778802  NaN
+7   binary_accuracy       val      2  0.778802  0.778802  0.778802  0.778802  NaN
+8              loss     train      1  0.688244  0.688244  0.688244  0.688244  NaN
+9              loss     train      2  0.511885  0.511885  0.511885  0.511885  NaN
+10             loss       val      1  0.573765  0.573765  0.573765  0.573765  NaN
+11             loss       val      2  0.496436  0.496436  0.496436  0.496436  NaN
+2021-07-19 10:59:33,363 [INFO ]  Training client_2 in 'one model per client' scenario, run number 1 of 2
+2021-07-19 10:59:47,659 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.688244
+1              loss     train   1     2  0.511885
+2   binary_accuracy     train   1     1  0.596083
+3   binary_accuracy     train   1     2  0.767442
+4               auc     train   1     1  0.626563
+5               auc     train   1     2  0.833558
+6              loss       val   1     1  0.573765
+7              loss       val   1     2  0.496436
+8   binary_accuracy       val   1     1  0.778802
+9   binary_accuracy       val   1     2  0.778802
+10              auc       val   1     1  0.828335
+11              auc       val   1     2  0.875149
+12             loss     train   1     1  0.741543
+13             loss     train   1     2  0.564768
+14  binary_accuracy     train   1     1  0.552020
+15  binary_accuracy     train   1     2  0.753978
+16              auc     train   1     1  0.579557
+17              auc     train   1     2  0.816976
+18             loss       val   1     1  0.657557
+19             loss       val   1     2  0.495494
+20  binary_accuracy       val   1     1  0.663594
+21  binary_accuracy       val   1     2  0.764977
+22              auc       val   1     1  0.842523
+23              auc       val   1     2  0.867120
+2021-07-19 10:59:47,686 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.603060  0.603060  0.579557  0.626563  0.033238
+1               auc     train      2  0.825267  0.825267  0.816976  0.833558  0.011725
+2               auc       val      1  0.835429  0.835429  0.828335  0.842523  0.010033
+3               auc       val      2  0.871134  0.871134  0.867120  0.875149  0.005677
+4   binary_accuracy     train      1  0.574051  0.574051  0.552020  0.596083  0.031158
+5   binary_accuracy     train      2  0.760710  0.760710  0.753978  0.767442  0.009520
+6   binary_accuracy       val      1  0.721198  0.721198  0.663594  0.778802  0.081464
+7   binary_accuracy       val      2  0.771889  0.771889  0.764977  0.778802  0.009776
+8              loss     train      1  0.714894  0.714894  0.688244  0.741543  0.037688
+9              loss     train      2  0.538327  0.538327  0.511885  0.564768  0.037394
+10             loss       val      1  0.615661  0.615661  0.573765  0.657557  0.059250
+11             loss       val      2  0.495965  0.495965  0.495494  0.496436  0.000666
+2021-07-19 10:59:48,558 [INFO ]  Plotting history for client_1
+2021-07-19 10:59:48,775 [INFO ]  Plotting history for client_2
+2021-07-19 10:59:48,985 [INFO ]  Training client_1 in 'one model per client' scenario, run number 2 of 2
+2021-07-19 11:00:05,806 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.688244
+1              loss     train   1     2  0.511885
+2   binary_accuracy     train   1     1  0.596083
+3   binary_accuracy     train   1     2  0.767442
+4               auc     train   1     1  0.626563
+5               auc     train   1     2  0.833558
+6              loss       val   1     1  0.573765
+7              loss       val   1     2  0.496436
+8   binary_accuracy       val   1     1  0.778802
+9   binary_accuracy       val   1     2  0.778802
+10              auc       val   1     1  0.828335
+11              auc       val   1     2  0.875149
+12             loss     train   1     1  0.741543
+13             loss     train   1     2  0.564768
+14  binary_accuracy     train   1     1  0.552020
+15  binary_accuracy     train   1     2  0.753978
+16              auc     train   1     1  0.579557
+17              auc     train   1     2  0.816976
+18             loss       val   1     1  0.657557
+19             loss       val   1     2  0.495494
+20  binary_accuracy       val   1     1  0.663594
+21  binary_accuracy       val   1     2  0.764977
+22              auc       val   1     1  0.842523
+23              auc       val   1     2  0.867120
+24             loss     train   2     1  0.647582
+25             loss     train   2     2  0.478561
+26  binary_accuracy     train   2     1  0.651163
+27  binary_accuracy     train   2     2  0.782130
+28              auc     train   2     1  0.704709
+29              auc     train   2     2  0.862993
+30             loss       val   2     1  0.534087
+31             loss       val   2     2  0.427678
+32  binary_accuracy       val   2     1  0.815668
+33  binary_accuracy       val   2     2  0.834101
+34              auc       val   2     1  0.864231
+35              auc       val   2     2  0.890782
+2021-07-19 11:00:05,853 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.636943  0.626563  0.579557  0.704709  0.063218
+1               auc     train      2  0.837843  0.833558  0.816976  0.862993  0.023306
+2               auc       val      1  0.845030  0.842523  0.828335  0.864231  0.018079
+3               auc       val      2  0.877683  0.875149  0.867120  0.890782  0.012033
+4   binary_accuracy     train      1  0.599755  0.596083  0.552020  0.651163  0.049673
+5   binary_accuracy     train      2  0.767850  0.767442  0.753978  0.782130  0.014080
+6   binary_accuracy       val      1  0.752688  0.778802  0.663594  0.815668  0.079329
+7   binary_accuracy       val      2  0.792627  0.778802  0.764977  0.834101  0.036577
+8              loss     train      1  0.692456  0.688244  0.647582  0.741543  0.047122
+9              loss     train      2  0.518405  0.511885  0.478561  0.564768  0.043472
+10             loss       val      1  0.588470  0.573765  0.534087  0.657557  0.063035
+11             loss       val      2  0.473203  0.495494  0.427678  0.496436  0.039429
+2021-07-19 11:00:06,908 [INFO ]  Training client_2 in 'one model per client' scenario, run number 2 of 2
+2021-07-19 11:00:26,970 [INFO ]               metric train/val run epoch     value
+0              loss     train   1     1  0.688244
+1              loss     train   1     2  0.511885
+2   binary_accuracy     train   1     1  0.596083
+3   binary_accuracy     train   1     2  0.767442
+4               auc     train   1     1  0.626563
+5               auc     train   1     2  0.833558
+6              loss       val   1     1  0.573765
+7              loss       val   1     2  0.496436
+8   binary_accuracy       val   1     1  0.778802
+9   binary_accuracy       val   1     2  0.778802
+10              auc       val   1     1  0.828335
+11              auc       val   1     2  0.875149
+12             loss     train   1     1  0.741543
+13             loss     train   1     2  0.564768
+14  binary_accuracy     train   1     1  0.552020
+15  binary_accuracy     train   1     2  0.753978
+16              auc     train   1     1  0.579557
+17              auc     train   1     2  0.816976
+18             loss       val   1     1  0.657557
+19             loss       val   1     2  0.495494
+20  binary_accuracy       val   1     1  0.663594
+21  binary_accuracy       val   1     2  0.764977
+22              auc       val   1     1  0.842523
+23              auc       val   1     2  0.867120
+24             loss     train   2     1  0.647582
+25             loss     train   2     2  0.478561
+26  binary_accuracy     train   2     1  0.651163
+27  binary_accuracy     train   2     2  0.782130
+28              auc     train   2     1  0.704709
+29              auc     train   2     2  0.862993
+30             loss       val   2     1  0.534087
+31             loss       val   2     2  0.427678
+32  binary_accuracy       val   2     1  0.815668
+33  binary_accuracy       val   2     2  0.834101
+34              auc       val   2     1  0.864231
+35              auc       val   2     2  0.890782
+36             loss     train   2     1  0.697787
+37             loss     train   2     2  0.614847
+38  binary_accuracy     train   2     1  0.555692
+39  binary_accuracy     train   2     2  0.689106
+40              auc     train   2     1  0.623467
+41              auc     train   2     2  0.739508
+42             loss       val   2     1  0.624617
+43             loss       val   2     2  0.576184
+44  binary_accuracy       val   2     1  0.635945
+45  binary_accuracy       val   2     2  0.751152
+46              auc       val   2     1  0.842906
+47              auc       val   2     2  0.800595
+2021-07-19 11:00:27,031 [INFO ]               metric train/val  epoch      mean    median       min       max       std
+0               auc     train      1  0.633574  0.625015  0.579557  0.704709  0.052055
+1               auc     train      2  0.813259  0.825267  0.739508  0.862993  0.052721
+2               auc       val      1  0.844499  0.842714  0.828335  0.864231  0.014800
+3               auc       val      2  0.858411  0.871134  0.800595  0.890782  0.039777
+4   binary_accuracy     train      1  0.588739  0.575887  0.552020  0.651163  0.046156
+5   binary_accuracy     train      2  0.748164  0.760710  0.689106  0.782130  0.041016
+6   binary_accuracy       val      1  0.723502  0.721198  0.635945  0.815668  0.087193
+7   binary_accuracy       val      2  0.782258  0.771889  0.751152  0.834101  0.036359
+8              loss     train      1  0.693789  0.693016  0.647582  0.741543  0.038567
+9              loss     train      2  0.542516  0.538327  0.478561  0.614847  0.059876
+10             loss       val      1  0.597507  0.599191  0.534087  0.657557  0.054549
+11             loss       val      2  0.498948  0.495965  0.427678  0.576184  0.060727
+2021-07-19 11:00:28,576 [INFO ]  Plotting history for client_1
+2021-07-19 11:00:28,800 [INFO ]  Plotting history for client_2
+2021-07-19 11:00:29,021 [INFO ]  Finished one model per client
