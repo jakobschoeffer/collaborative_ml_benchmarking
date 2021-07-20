@@ -3,6 +3,7 @@ import os
 
 import nest_asyncio
 import tensorflow as tf
+import tensorflow_addons as tfa
 import tensorflow_federated as tff
 from box import Box
 
@@ -59,7 +60,11 @@ def run_federated_model(
                 model,
                 input_spec=fl_train_list[0].element_spec,
                 loss=tf.keras.losses.BinaryCrossentropy(),
-                metrics=[tf.keras.metrics.BinaryAccuracy(), tf.keras.metrics.AUC()],
+                metrics=[
+                    tf.keras.metrics.BinaryAccuracy(),
+                    tf.keras.metrics.AUC(),
+                    # tfa.metrics.F1Score(num_classes=2),
+                ],
             )
 
         # Simulate a few rounds of training with the selected client devices.
