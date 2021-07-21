@@ -11,7 +11,6 @@ from fed_ml_horizontal.benchmarking.model import create_my_model
 from fed_ml_horizontal.benchmarking.plotting import (
     aggregate_and_plot_hists,
     create_empty_run_hist_df,
-    plot_metrics_hist,
     save_metrics_in_df,
 )
 from fed_ml_horizontal.benchmarking.tf_utils import create_tf_dataset
@@ -39,7 +38,6 @@ def run_federated_model(
     )
     output_path_for_setting = os.path.join(output_path_for_scenario, "fl")
     os.makedirs(output_path_for_setting)
-    run_hists = {}
 
     df_run_hists = create_empty_run_hist_df()
 

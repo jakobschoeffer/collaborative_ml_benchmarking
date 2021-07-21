@@ -2,14 +2,12 @@ import logging
 import os
 
 import tensorflow as tf
-from box import Box
 
 from fed_ml_horizontal.benchmarking.model import create_my_model
 from fed_ml_horizontal.benchmarking.plotting import (
     aggregate_and_plot_hists,
     create_dataset_for_plotting,
     create_empty_run_hist_df,
-    plot_metrics_hist,
 )
 from fed_ml_horizontal.benchmarking.tf_utils import create_tf_dataset
 
