@@ -34,14 +34,13 @@ def run_one_model_per_client(
     output_path_for_setting = os.path.join(output_path_for_scenario, "client_models")
     os.makedirs(output_path_for_setting)
 
-    df_run_hists_client_model = create_empty_run_hist_df()
+    for client in client_dataset_dict.keys():
+        output_path_for_client = os.path.join(output_path_for_setting, client)
+        os.makedirs(output_path_for_client)
 
-    for i in range(1, num_reruns + 1):
-        output_path_for_run = os.path.join(output_path_for_setting, f"run_{i}")
-        os.makedirs(output_path_for_run)
+        df_run_hists_client_model = create_empty_run_hist_df()
 
-        one_model_per_client_dict = {}
-        for client in client_dataset_dict.keys():
+        for i in range(1, num_reruns + 1):
             logging.info(
                 f"Training {client} in 'one model per client' scenario, run number {i} of {num_reruns}"
             )
@@ -63,45 +62,19 @@ def run_one_model_per_client(
             history = client_model.fit(
                 train, validation_data=test, batch_size=None, epochs=num_epochs
             )
-            Box(history.history).to_yaml(
-                os.path.join(
-                    output_path_for_run,
-                    f"one_model_per_{client}_train.yaml",
-                )
-            )
-            one_model_per_client_dict.update(
-                {
-                    client: {
-                        "model": client_model,
-                        "history": history,
-                        "train": train,
-                        "test": test,
-                        "valid": valid,
-                    }
-                }
-            )
 
             df_run_hists_client_model = create_dataset_for_plotting(
                 df_run_hists_client_model, history.history, run=i
             )
 
-            df_run_hists_client_model.to_csv(
-                os.path.join(output_path_for_setting, f"{client}_df_run_hists.csv")
-            )
-            aggregate_and_plot_hists(
-                df_run_hists_client_model,
-                output_path_for_setting,
-                output_path_for_scenario,
-                prefix=f"{client}",
-            )
-
-        for client, client_model_dict in one_model_per_client_dict.items():
-            logging.info(f"Plotting history for {client}")
-            plot_metrics_hist(
-                client_model_dict["history"].history,
-                f"one_model_per_{client}_plot",
-                output_path_for_run,
-            )
+        df_run_hists_client_model.to_csv(
+            os.path.join(output_path_for_client, f"{client}_df_run_hists.csv")
+        )
+        aggregate_and_plot_hists(
+            df_run_hists_client_model,
+            output_path_for_client,
+            prefix=f"{client}",
+        )
 
 
 def per_client_train_test_valid(

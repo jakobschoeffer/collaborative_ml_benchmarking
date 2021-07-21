@@ -1,0 +1,31 @@
+project:
+  data_path: fed_ml_horizontal/tmp/data
+  data_url: https://bwdatadiss.kit.edu/dataitem/download/10917
+  log_file_prefix: fed_ml_horizontal_log
+  log_path: fed_ml_horizontal/log
+  output_path: fed_ml_horizontal/outputs
+  steps:
+  - fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios
+scenarios:
+  scenario_1:
+    clients:
+      client_1:
+        subtotal_no_pitting_share: 0.05
+        subtotal_pitting_share: 0.4
+      client_2:
+        subtotal_no_pitting_share: 0.4
+        subtotal_pitting_share: 0.1
+      client_3:
+        subtotal_no_pitting_share: 0.05
+        subtotal_pitting_share: 0.05
+      client_4:
+        subtotal_no_pitting_share: 0.1
+        subtotal_pitting_share: 0.05
+      client_5:
+        subtotal_no_pitting_share: 0.4
+        subtotal_pitting_share: 0.4
+    num_epochs: 5
+    num_reruns: 2
+    test_share: 0.2
+    total_share: 0.1
+    valid_share: 0.05

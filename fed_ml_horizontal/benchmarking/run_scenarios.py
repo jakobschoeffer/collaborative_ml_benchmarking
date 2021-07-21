@@ -1,10 +1,11 @@
 import logging
 import os
 import time
+import traceback
 from contextlib import redirect_stdout
 
 import fed_ml_horizontal.benchmarking.data_splitting as splitting
-from fed_ml_horizontal.benchmarking.baseline_model import run_baseline_model
+from fed_ml_horizontal.benchmarking.all_data_model import run_all_data_model
 from fed_ml_horizontal.benchmarking.federated_learning import run_federated_model
 from fed_ml_horizontal.benchmarking.model import create_my_model
 from fed_ml_horizontal.benchmarking.one_model_per_client import run_one_model_per_client
@@ -12,7 +13,7 @@ from fed_ml_horizontal.benchmarking.one_model_per_client import run_one_model_pe
 
 def run_scenarios(config):
     """Main function that iterates over all scenarios defined in the config file.
-    For each scenario the federated, baseline and one model per client setting is performed.
+    For each scenario the federated, all_data and one model per client setting is performed.
 
     Args:
         config (Box): config object with project and scenario specifications
@@ -64,15 +65,15 @@ def run_scenarios(config):
             )
             logging.info("Finished federated model")
 
-            logging.info("Start baseline model")
-            run_baseline_model(
+            logging.info("Start all data model")
+            run_all_data_model(
                 client_dataset_dict,
                 all_images_path,
                 output_path_for_scenario,
                 num_reruns=scenario_config.num_reruns,
                 num_epochs=scenario_config.num_epochs,
             )
-            logging.info("Finished baseline model")
+            logging.info("Finished all data model")
 
             logging.info("Start one model per client")
             run_one_model_per_client(
@@ -83,5 +84,6 @@ def run_scenarios(config):
                 num_epochs=scenario_config.num_epochs,
             )
             logging.info("Finished one model per client")
-        except:
-            logging.error(f"An exception occured trying to run scenario {scenario}")
+        except Exception as e:
+            logging.error(f"An exception occured trying to run {scenario}")
+            logging.error(traceback.format_exc())

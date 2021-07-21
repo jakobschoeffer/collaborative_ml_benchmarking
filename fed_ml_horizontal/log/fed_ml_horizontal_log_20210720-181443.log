@@ -1,3 +1,0 @@
-2021-07-20 18:14:43,044 [INFO ]  {'project': {'data_url': 'https://bwdatadiss.kit.edu/dataitem/download/10917', 'data_path': 'fed_ml_horizontal/tmp/data', 'output_path': 'fed_ml_horizontal/outputs', 'log_path': 'fed_ml_horizontal/log', 'log_file_prefix': 'fed_ml_horizontal_log', 'steps': ['fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios']}}
-2021-07-20 18:14:43,044 [INFO ]  Read config and wrote config to log file
-2021-07-20 18:14:43,044 [INFO ]  Running 1 steps from fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios to fed_ml_horizontal.benchmarking.run_scenarios.run_scenarios

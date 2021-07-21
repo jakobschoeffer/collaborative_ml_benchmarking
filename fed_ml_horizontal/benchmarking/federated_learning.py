@@ -45,8 +45,6 @@ def run_federated_model(
 
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
-        output_path_for_run = os.path.join(output_path_for_setting, f"run_{i}")
-        os.makedirs(output_path_for_run)
         # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
         # Wrap a Keras model for use with TFF.
         def model_fn():
@@ -85,7 +83,7 @@ def run_federated_model(
         )
 
         federated_eval = tff.learning.build_federated_evaluation(model_fn)
-        for epoch in range(num_epochs):
+        for epoch in range(1, num_epochs + 1):
             state, metrics = trainer.next(state, fl_train_list)
             fed_hist["binary_accuracy"].append(
                 float(metrics["train"]["binary_accuracy"])
@@ -93,7 +91,7 @@ def run_federated_model(
             fed_hist["loss"].append(float(metrics["train"]["loss"]))
 
             logging.info(
-                f"train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, loss: {float(metrics['train']['loss'])}"
+                f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, loss: {float(metrics['train']['loss'])}"
             )
 
             eval_metrics = federated_eval(state.model, fl_test_list)
@@ -102,7 +100,7 @@ def run_federated_model(
             )
             fed_hist["val_loss"].append(float(eval_metrics["loss"]))
             logging.info(
-                f"val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, loss: {float(eval_metrics['loss'])}"
+                f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, loss: {float(eval_metrics['loss'])}"
             )
 
             df_run_hists = save_metrics_in_df(
@@ -112,15 +110,9 @@ def run_federated_model(
                 df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
             )
 
-        fed_hist.to_yaml(os.path.join(output_path_for_run, "fed_train.yaml"))
-        plot_metrics_hist(fed_hist, f"fed_plot", output_path_for_run)
-        run_hists.update({i: fed_hist})
-
     df_run_hists.to_csv(os.path.join(output_path_for_setting, "fl_df_run_hists.csv"))
 
-    aggregate_and_plot_hists(
-        df_run_hists, output_path_for_setting, output_path_for_scenario, prefix="fl"
-    )
+    aggregate_and_plot_hists(df_run_hists, output_path_for_setting, prefix="fl")
 
 
 def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20):

@@ -35,16 +35,13 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_loss.png"))
 
 
-def aggregate_and_plot_hists(
-    df_run_hists, output_path_for_setting, output_path_for_scenario, prefix
-):
+def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
     """Plots defined metrics over epochs aggregated over number of reruns.
     Saves figures in defined paths.
 
     Args:
         df_run_hists (pandas DataFrame): df containing values of defined metrics for train/val over runs and epochs
-        output_path_for_setting (str): individual output path of executed setting
-        output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
+        output_path (str): individual output path
         prefix (str): prefix for setting
     """
     logging.info(str(df_run_hists))
@@ -53,9 +50,7 @@ def aggregate_and_plot_hists(
         .agg(["mean", "median", "min", "max", "std"])
         .reset_index()
     )
-    df_run_hists_agg.to_csv(
-        os.path.join(output_path_for_setting, f"{prefix}_df_run_hists_agg.csv")
-    )
+    df_run_hists_agg.to_csv(os.path.join(output_path, f"{prefix}_df_run_hists_agg.csv"))
     logging.info(str(df_run_hists_agg))
 
     # TODO: Add quantiles as "confidence intervals"
@@ -68,7 +63,7 @@ def aggregate_and_plot_hists(
             hue="train/val",
         ).set_title(f"Training and validation {metric} (median)")
         g.get_figure().savefig(
-            os.path.join(output_path_for_scenario, f"{prefix}_{metric}_median.png")
+            os.path.join(output_path, f"{prefix}_{metric}_median.png")
         )
         plt.close()
 
@@ -81,9 +76,8 @@ def aggregate_and_plot_hists(
             hue="train/val",
             ci="sd",
         ).set_title(f"Training and validation {metric} (mean, sd ci)")
-        fig.savefig(
-            os.path.join(output_path_for_scenario, f"{prefix}_{metric}_mean_sd.png")
-        )
+        fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"))
+        plt.close()
 
 
 def save_metrics_in_df(df_run_hists, metrics, mode, run, epoch):
@@ -134,7 +128,7 @@ def create_dataset_for_plotting(df_run_hists, history, run):
     hist_df = pd.DataFrame.from_dict(history)
     for mode in ["train", "val"]:
         for metric in [metric for metric in history.keys() if "val_" not in metric]:
-            for epoch in range(1, hist_df.shape[0]):
+            for epoch in range(1, hist_df.shape[0] + 1):
                 prefix = "" if mode == "train" else "val_"
                 tmp_dict = {
                     "metric": metric,
