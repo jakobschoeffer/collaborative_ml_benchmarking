@@ -40,6 +40,9 @@ def run_federated_model(
     os.makedirs(output_path_for_setting)
 
     df_run_hists = create_empty_run_hist_df()
+    per_client_df_run_hists = {
+        client: create_empty_run_hist_df() for client in client_dataset_dict.keys()
+    }
 
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
@@ -89,7 +92,7 @@ def run_federated_model(
             fed_hist["loss"].append(float(metrics["train"]["loss"]))
 
             logging.info(
-                f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, loss: {float(metrics['train']['loss'])}"
+                f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, auc: {float(metrics['train']['auc'])}, loss: {float(metrics['train']['loss'])}"
             )
 
             eval_metrics = federated_eval(state.model, fl_test_list)
@@ -98,7 +101,7 @@ def run_federated_model(
             )
             fed_hist["val_loss"].append(float(eval_metrics["loss"]))
             logging.info(
-                f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, loss: {float(eval_metrics['loss'])}"
+                f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, auc: {float(eval_metrics['auc'])}, loss: {float(eval_metrics['loss'])}"
             )
 
             df_run_hists = save_metrics_in_df(
@@ -108,9 +111,43 @@ def run_federated_model(
                 df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
             )
 
+            # save run hists per client on specific client dataset
+            for client_num, client in enumerate(per_client_df_run_hists.keys()):
+                metrics_train = evaluate_model_for_client_dataset(
+                    state, fl_train_list[client_num]
+                )
+                logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
+                per_client_df_run_hists[client] = save_metrics_in_df(
+                    per_client_df_run_hists[client],
+                    metrics_train,
+                    mode="train",
+                    run=i,
+                    epoch=epoch,
+                )
+                metrics_val = evaluate_model_for_client_dataset(
+                    state, fl_test_list[client_num]
+                )
+                logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
+                per_client_df_run_hists[client] = save_metrics_in_df(
+                    per_client_df_run_hists[client],
+                    metrics_val,
+                    mode="val",
+                    run=i,
+                    epoch=epoch,
+                )
+
     df_run_hists.to_csv(os.path.join(output_path_for_setting, "fl_df_run_hists.csv"))
 
     aggregate_and_plot_hists(df_run_hists, output_path_for_setting, prefix="fl")
+    for client in per_client_df_run_hists.keys():
+        per_client_df_run_hists[client].to_csv(
+            os.path.join(output_path_for_setting, f"fl_{client}_df_run_hists.csv")
+        )
+        aggregate_and_plot_hists(
+            per_client_df_run_hists[client],
+            output_path_for_setting,
+            prefix=f"fl_{client}",
+        )
 
 
 def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20):
@@ -142,3 +179,23 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
         )
 
     return fl_train_list, fl_test_list, fl_valid_list
+
+
+def evaluate_model_for_client_dataset(state, client_dataset):
+    keras_model = create_my_model()
+    keras_model.compile(
+        loss=tf.keras.losses.BinaryCrossentropy(),
+        metrics=[
+            tf.keras.metrics.BinaryAccuracy(),
+            tf.keras.metrics.AUC(name="auc"),
+            # tfa.metrics.F1Score(num_classes=2),
+        ],
+    )
+    keras_model.set_weights(state.model.trainable)
+    metrics_list = keras_model.evaluate(client_dataset)
+    metrics = {
+        "loss": metrics_list[0],
+        "binary_accuracy": metrics_list[1],
+        "auc": metrics_list[2],
+    }
+    return metrics
