@@ -19,6 +19,7 @@ def run_all_data_model(
     output_path_for_scenario,
     num_reruns,
     num_epochs,
+    learning_rate,
 ):
     """Executes all data model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -28,6 +29,8 @@ def run_all_data_model(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
+        num_epochs (int): number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer
     """
     (
         all_clients_train,
@@ -45,7 +48,7 @@ def run_all_data_model(
 
         all_data_model = create_my_model()
         all_data_model.compile(
-            optimizer="Adam",  # tf.keras.optimizers.Adam(learning_rate=0.0001), #tf.keras.optimizers.Adam(),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),  # "Adam"
             loss=tf.keras.losses.BinaryCrossentropy(),
             metrics=[
                 tf.keras.metrics.BinaryAccuracy(),

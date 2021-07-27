@@ -62,6 +62,7 @@ def run_scenarios(config):
                 output_path_for_scenario,
                 num_reruns=scenario_config.num_reruns,
                 num_epochs=scenario_config.num_epochs,
+                learning_rate=scenario_config.learning_rate,
             )
             logging.info("Finished federated model")
 
@@ -72,6 +73,7 @@ def run_scenarios(config):
                 output_path_for_scenario,
                 num_reruns=scenario_config.num_reruns,
                 num_epochs=scenario_config.num_epochs,
+                learning_rate=scenario_config.learning_rate,
             )
             logging.info("Finished all data model")
 
@@ -82,6 +84,7 @@ def run_scenarios(config):
                 output_path_for_scenario,
                 num_reruns=scenario_config.num_reruns,
                 num_epochs=scenario_config.num_epochs,
+                learning_rate=scenario_config.learning_rate,
             )
             logging.info("Finished one model per client")
         except Exception as e:

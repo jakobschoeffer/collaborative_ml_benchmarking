@@ -18,6 +18,7 @@ def run_one_model_per_client(
     output_path_for_scenario,
     num_reruns,
     num_epochs,
+    learning_rate,
 ):
     """Executes one model per client for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -27,6 +28,8 @@ def run_one_model_per_client(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
+        num_epochs (int): number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer
     """
 
     output_path_for_setting = os.path.join(output_path_for_scenario, "client_models")
@@ -50,7 +53,9 @@ def run_one_model_per_client(
             )
             client_model = create_my_model()
             client_model.compile(
-                optimizer="Adam",  # tf.keras.optimizers.Adam(),
+                optimizer=tf.keras.optimizers.Adam(
+                    learning_rate=learning_rate
+                ),  # "Adam"
                 loss=tf.keras.losses.BinaryCrossentropy(),
                 metrics=[
                     tf.keras.metrics.BinaryAccuracy(),

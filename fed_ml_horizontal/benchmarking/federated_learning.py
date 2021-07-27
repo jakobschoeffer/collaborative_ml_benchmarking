@@ -22,6 +22,7 @@ def run_federated_model(
     output_path_for_scenario,
     num_reruns,
     num_epochs,
+    learning_rate,
 ):
     """Executes federated model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -32,6 +33,7 @@ def run_federated_model(
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
         num_epochs (int): number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer
     """
     # Data is the same for all reruns of the federated model
     fl_train_list, fl_test_list, fl_valid_list, client_name_list = create_fl_datasets(
@@ -68,7 +70,10 @@ def run_federated_model(
 
         # Simulate a few rounds of training with the selected client devices.
         trainer = tff.learning.build_federated_averaging_process(
-            model_fn, client_optimizer_fn=lambda: tf.keras.optimizers.Adam()
+            model_fn,
+            client_optimizer_fn=lambda: tf.keras.optimizers.Adam(
+                learning_rate=learning_rate
+            ),
         )
 
         nest_asyncio.apply()  # ? quick and dirty
