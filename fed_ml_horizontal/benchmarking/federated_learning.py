@@ -31,9 +31,10 @@ def run_federated_model(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
+        num_epochs (int): number of epochs specified in config object
     """
     # Data is the same for all reruns of the federated model
-    fl_train_list, fl_test_list, fl_valid_list = create_fl_datasets(
+    fl_train_list, fl_test_list, fl_valid_list, client_name_list = create_fl_datasets(
         client_dataset_dict, all_images_path
     )
     output_path_for_setting = os.path.join(output_path_for_scenario, "fl")
@@ -41,15 +42,15 @@ def run_federated_model(
 
     df_run_hists = create_empty_run_hist_df()
     per_client_df_run_hists = {
-        client: create_empty_run_hist_df() for client in client_dataset_dict.keys()
+        client: create_empty_run_hist_df() for client in client_name_list
     }
 
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
         # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
-        # Wrap a Keras model for use with TFF.
+
         def model_fn():
-            """Runs tensorflow federated model
+            """Runs tensorflow federated model.
 
             Returns:
                 tensorflow_federated.python.learning.model_utils.EnhancedModel: keras model with specified loss and metrics
@@ -62,7 +63,6 @@ def run_federated_model(
                 metrics=[
                     tf.keras.metrics.BinaryAccuracy(),
                     tf.keras.metrics.AUC(),
-                    # tfa.metrics.F1Score(num_classes=2),
                 ],
             )
 
@@ -112,18 +112,18 @@ def run_federated_model(
             )
 
             # save run hists per client on specific client dataset
-            for client_num, client in enumerate(per_client_df_run_hists.keys()):
-                metrics_train = evaluate_model_for_client_dataset(
-                    state, fl_train_list[client_num]
-                )
-                logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
-                per_client_df_run_hists[client] = save_metrics_in_df(
-                    per_client_df_run_hists[client],
-                    metrics_train,
-                    mode="train",
-                    run=i,
-                    epoch=epoch,
-                )
+            for client_num, client in enumerate(client_name_list):
+                # metrics_train = evaluate_model_for_client_dataset(
+                #     state, fl_train_list[client_num]
+                # )
+                # logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
+                # per_client_df_run_hists[client] = save_metrics_in_df(
+                #     per_client_df_run_hists[client],
+                #     metrics_train,
+                #     mode="train",
+                #     run=i,
+                #     epoch=epoch,
+                # )
                 metrics_val = evaluate_model_for_client_dataset(
                     state, fl_test_list[client_num]
                 )
@@ -139,13 +139,16 @@ def run_federated_model(
     df_run_hists.to_csv(os.path.join(output_path_for_setting, "fl_df_run_hists.csv"))
 
     aggregate_and_plot_hists(df_run_hists, output_path_for_setting, prefix="fl")
-    for client in per_client_df_run_hists.keys():
+
+    for client in client_name_list:
+        output_path_for_client = os.path.join(output_path_for_setting, client)
+        os.makedirs(output_path_for_client)
         per_client_df_run_hists[client].to_csv(
-            os.path.join(output_path_for_setting, f"fl_{client}_df_run_hists.csv")
+            os.path.join(output_path_for_client, f"fl_{client}_df_run_hists.csv")
         )
         aggregate_and_plot_hists(
             per_client_df_run_hists[client],
-            output_path_for_setting,
+            output_path_for_client,
             prefix=f"fl_{client}",
         )
 
@@ -165,6 +168,7 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
     fl_train_list = []  # list of datasets. one dataset per client
     fl_test_list = []
     fl_valid_list = []
+    client_name_list = []
 
     for client_name, client_data_dict in client_dataset_dict.items():
         fl_train = create_tf_dataset(client_data_dict["train"], all_images_path)
@@ -177,18 +181,27 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
         fl_valid_list.append(
             fl_valid.shuffle(len(fl_valid)).repeat(repeat).batch(batch)
         )
+        client_name_list.append(client_name)
 
-    return fl_train_list, fl_test_list, fl_valid_list
+    return fl_train_list, fl_test_list, fl_valid_list, client_name_list
 
 
 def evaluate_model_for_client_dataset(state, client_dataset):
+    """Evaluates federated learning model on individual client datasets.
+
+    Args:
+        state (tensorflow_federated.python.learning.framework.optimizer_utils.ServerState): state of the federated learning model in current epoch
+        client_dataset (BatchDataset): dataset containing images and labels per client
+
+    Returns:
+        dict: dictionary of metrics per client
+    """
     keras_model = create_my_model()
     keras_model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
         metrics=[
             tf.keras.metrics.BinaryAccuracy(),
             tf.keras.metrics.AUC(name="auc"),
-            # tfa.metrics.F1Score(num_classes=2),
         ],
     )
     keras_model.set_weights(state.model.trainable)
