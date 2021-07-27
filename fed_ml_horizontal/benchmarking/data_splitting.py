@@ -54,8 +54,8 @@ def make_client_split(
     no_pitting_image_list,
     client_split_dict,
     total_share=1,
-    test_share=0.2,
-    valid_share=0.05,
+    test_share=0.05,
+    valid_share=0.2,
 ):
     """Makes clients splits for train, test and valid images according to config object.
 
@@ -167,8 +167,8 @@ def create_client_dataset_dict(
     client_split_dict,
     output_dir,
     total_share=1,
-    test_share=0.2,
-    valid_share=0.05,
+    test_share=0.05,
+    valid_share=0.2,
 ):
     """Creats dictionary containing filenames of selected total, train, test, valid images (pitting and no_pitting) for each client.
     Executes check for valid pitting and no_pitting shares.

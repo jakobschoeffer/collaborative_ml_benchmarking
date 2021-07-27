@@ -1,8 +1,8 @@
 scenarios:
   scenario_1:
     total_share: 0.1 # 1.0
-    test_share: 0.2
-    valid_share: 0.05
+    test_share: 0.05
+    valid_share: 0.2
     num_reruns: 3
     num_epochs: 5
     clients:

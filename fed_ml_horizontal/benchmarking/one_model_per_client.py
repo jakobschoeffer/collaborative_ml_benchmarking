@@ -58,7 +58,7 @@ def run_one_model_per_client(
                 ],
             )
             history = client_model.fit(
-                train, validation_data=test, batch_size=None, epochs=num_epochs
+                train, validation_data=valid, batch_size=None, epochs=num_epochs
             )
 
             df_run_hists_client_model = create_dataset_for_plotting(

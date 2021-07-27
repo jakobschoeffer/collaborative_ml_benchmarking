@@ -54,7 +54,7 @@ def run_all_data_model(
         )
         history_all_data = all_data_model.fit(
             all_clients_train,
-            validation_data=all_clients_test,
+            validation_data=all_clients_valid,
             batch_size=None,
             epochs=num_epochs,
             verbose=1,

@@ -95,7 +95,7 @@ def run_federated_model(
                 f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, auc: {float(metrics['train']['auc'])}, loss: {float(metrics['train']['loss'])}"
             )
 
-            eval_metrics = federated_eval(state.model, fl_test_list)
+            eval_metrics = federated_eval(state.model, fl_valid_list)
             fed_hist["val_binary_accuracy"].append(
                 float(eval_metrics["binary_accuracy"])
             )
@@ -125,7 +125,7 @@ def run_federated_model(
                 #     epoch=epoch,
                 # )
                 metrics_val = evaluate_model_for_client_dataset(
-                    state, fl_test_list[client_num]
+                    state, fl_valid_list[client_num]
                 )
                 logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
                 per_client_df_run_hists[client] = save_metrics_in_df(
