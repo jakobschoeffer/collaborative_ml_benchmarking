@@ -35,6 +35,21 @@ def run_federated_model(
         num_epochs (int): number of epochs specified in config object
         learning_rate (float): learning rate for optimizer
     """
+    # Multi-GPU execution with configuration to mitigate OOM.
+    # cpu_device = tf.config.list_logical_devices("CPU")[0]
+    # gpu_devices = tf.config.list_logical_devices("GPU")
+    # gpu_devices = tf.config.list_physical_devices("GPU")
+
+    # tf.config.experimental.set_virtual_device_configuration(gpu_devices[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=5120)])
+    # tf.config.experimental.set_memory_growth(gpu_devices[0], True)
+
+    # tff.backends.native.set_local_execution_context(
+    #     server_tf_device=cpu_device,
+    #     client_tf_devices=gpu_devices[0],
+    #     clients_per_thread=1,
+    #     max_fanout=32,
+    # )
+
     # Data is the same for all reruns of the federated model
     fl_train_list, fl_test_list, fl_valid_list, client_name_list = create_fl_datasets(
         client_dataset_dict, all_images_path

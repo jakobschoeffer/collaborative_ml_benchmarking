@@ -4,6 +4,8 @@ import time
 import traceback
 from contextlib import redirect_stdout
 
+import tensorflow as tf
+
 import fed_ml_horizontal.benchmarking.data_splitting as splitting
 from fed_ml_horizontal.benchmarking.all_data_model import run_all_data_model
 from fed_ml_horizontal.benchmarking.federated_learning import run_federated_model
@@ -19,6 +21,12 @@ def run_scenarios(config):
         config (Box): config object with project and scenario specifications
     """
     # does not work logging.getLogger("tensorflow").setLevel(logging.ERROR)
+    physical_devices = tf.config.list_physical_devices("GPU")
+    try:
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    except:
+        # Invalid device or cannot modify virtual devices once initialized.
+        pass
 
     current_datetime = time.strftime("%Y%m%d-%H%M%S")
     output_path_for_session = os.path.join(
