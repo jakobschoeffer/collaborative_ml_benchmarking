@@ -29,6 +29,19 @@ def run_scenarios(config):
         )
         pass
 
+    # gpus = tf.config.list_physical_devices("GPU")
+    # if gpus:
+    #     # Restrict TensorFlow to only allocate 1GB of memory on the first GPU
+    #     try:
+    #         tf.config.set_logical_device_configuration(
+    #             gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=1500)]
+    #         )
+    #         logical_gpus = tf.config.list_logical_devices("GPU")
+    #         print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    #     except RuntimeError as e:
+    #         # Virtual devices must be set before GPUs have been initialized
+    #         print(e)
+
     current_datetime = time.strftime("%Y%m%d-%H%M%S")
     output_path_for_session = os.path.join(
         config.project.output_path, f"HFL_KIT_PITTING_CLASS_{current_datetime}"
@@ -48,7 +61,10 @@ def run_scenarios(config):
                 f"Running {scenario} with configuration {scenario_config}. Output path: {output_path_for_scenario}"
             )
 
-            client_dataset_dict, all_images_path = splitting.create_client_dataset_dict(
+            (
+                client_dataset_dict,
+                all_images_path,
+            ) = splitting.create_client_dataset_dict(
                 data_path=config.project.data_path,
                 output_dir=output_path_for_scenario,
                 total_share=scenario_config.total_share,

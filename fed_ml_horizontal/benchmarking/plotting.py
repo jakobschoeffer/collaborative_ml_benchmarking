@@ -20,6 +20,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     fig = plt.figure()
 
     # Plot training and validation accuracy per epoch
+    plt.ylim(bottom=0.7, top=1)
     plt.plot(epochs, history["binary_accuracy"])
     plt.plot(epochs, history["val_binary_accuracy"])
     plt.title("Training and validation accuracy")
@@ -28,6 +29,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     fig = plt.figure()
 
     # Plot training and validation loss per epoch
+    plt.ylim(bottom=0, top=0.5)
     plt.plot(epochs, history["loss"])
     plt.plot(epochs, history["val_loss"])
     plt.title("Training and validation loss")
@@ -56,6 +58,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
     # TODO: Add quantiles as "confidence intervals"
     for metric in df_run_hists_agg["metric"].unique():
         plt.figure()
+        plt.ylim(bottom=0.7, top=1)
         g = sns.lineplot(
             data=df_run_hists_agg[lambda x: x.metric == metric],
             x="epoch",
@@ -69,6 +72,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
 
     for metric in df_run_hists_agg["metric"].unique():
         fig = plt.figure()
+        plt.ylim(bottom=0.7, top=1)
         sns.lineplot(
             data=df_run_hists[lambda x: x.metric == metric].drop("run", axis=1),
             x="epoch",

@@ -1,3 +1,4 @@
+import gc
 import logging
 import os
 
@@ -48,99 +49,133 @@ def run_federated_model(
         client: create_empty_run_hist_df() for client in client_name_list
     }
 
+    nest_asyncio.apply()
+
     for i in range(1, num_reruns + 1):
-        logging.info(f"Start run {i} out of {num_reruns} runs")
-        # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
 
-        def model_fn():
-            """Runs tensorflow federated model.
+        def execute_run(
+            i,
+            per_client_df_run_hists,
+            df_run_hists,
+            output_path_for_setting,
+            fl_train_list,
+            fl_test_list,
+            fl_valid_list,
+            client_name_list,
+        ):
+            logging.info(f"Start run {i} out of {num_reruns} runs")
+            # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
 
-            Returns:
-                tensorflow_federated.python.learning.model_utils.EnhancedModel: keras model with specified loss and metrics
-            """
-            model = create_my_model()
-            return tff.learning.from_keras_model(
-                model,
-                input_spec=fl_train_list[0].element_spec,
-                loss=tf.keras.losses.BinaryCrossentropy(),
-                metrics=[
-                    tf.keras.metrics.BinaryAccuracy(),
-                    tf.keras.metrics.AUC(),
-                ],
+            def model_fn():
+                """Runs tensorflow federated model.
+
+                Returns:
+                    tensorflow_federated.python.learning.model_utils.EnhancedModel: keras model with specified loss and metrics
+                """
+                model = create_my_model()
+                return tff.learning.from_keras_model(
+                    model,
+                    input_spec=fl_train_list[0].element_spec,
+                    loss=tf.keras.losses.BinaryCrossentropy(),
+                    metrics=[
+                        tf.keras.metrics.BinaryAccuracy(),
+                        tf.keras.metrics.AUC(),
+                    ],
+                )
+
+            # Simulate a few rounds of training with the selected client devices.
+            trainer = tff.learning.build_federated_averaging_process(
+                model_fn,
+                client_optimizer_fn=lambda: tf.keras.optimizers.Adam(
+                    learning_rate=learning_rate
+                ),
             )
 
-        # Simulate a few rounds of training with the selected client devices.
-        trainer = tff.learning.build_federated_averaging_process(
-            model_fn,
-            client_optimizer_fn=lambda: tf.keras.optimizers.Adam(
-                learning_rate=learning_rate
-            ),
+            # nest_asyncio.apply()
+            state = trainer.initialize()
+
+            fed_hist = Box(
+                {
+                    "binary_accuracy": [],
+                    "loss": [],
+                    "val_binary_accuracy": [],
+                    "val_loss": [],
+                }
+            )
+
+            federated_eval = tff.learning.build_federated_evaluation(model_fn)
+            for epoch in range(1, num_epochs + 1):
+                state, metrics = trainer.next(state, fl_train_list)
+                fed_hist["binary_accuracy"].append(
+                    float(metrics["train"]["binary_accuracy"])
+                )
+                fed_hist["loss"].append(float(metrics["train"]["loss"]))
+
+                logging.info(
+                    f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, auc: {float(metrics['train']['auc'])}, loss: {float(metrics['train']['loss'])}"
+                )
+
+                eval_metrics = federated_eval(state.model, fl_valid_list)
+                fed_hist["val_binary_accuracy"].append(
+                    float(eval_metrics["binary_accuracy"])
+                )
+                fed_hist["val_loss"].append(float(eval_metrics["loss"]))
+                logging.info(
+                    f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, auc: {float(eval_metrics['auc'])}, loss: {float(eval_metrics['loss'])}"
+                )
+
+                df_run_hists = save_metrics_in_df(
+                    df_run_hists, metrics["train"], mode="train", run=i, epoch=epoch
+                )
+                df_run_hists = save_metrics_in_df(
+                    df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
+                )
+
+                # save run hists per client on specific client dataset
+                for client_num, client in enumerate(client_name_list):
+                    # metrics_train = evaluate_model_for_client_dataset(
+                    #     state, fl_train_list[client_num]
+                    # )
+                    # logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
+                    # per_client_df_run_hists[client] = save_metrics_in_df(
+                    #     per_client_df_run_hists[client],
+                    #     metrics_train,
+                    #     mode="train",
+                    #     run=i,
+                    #     epoch=epoch,
+                    # )
+                    metrics_val = evaluate_model_for_client_dataset(
+                        state, fl_valid_list[client_num]
+                    )
+                    logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
+                    per_client_df_run_hists[client] = save_metrics_in_df(
+                        per_client_df_run_hists[client],
+                        metrics_val,
+                        mode="val",
+                        run=i,
+                        epoch=epoch,
+                    )
+
+            del trainer
+            del state
+            del federated_eval
+
+            return df_run_hists, per_client_df_run_hists
+
+        df_run_hists, per_client_df_run_hists = execute_run(
+            i,
+            per_client_df_run_hists,
+            df_run_hists,
+            output_path_for_setting,
+            fl_train_list,
+            fl_test_list,
+            fl_valid_list,
+            client_name_list,
         )
 
-        nest_asyncio.apply()  # ? quick and dirty
-        state = trainer.initialize()
-
-        fed_hist = Box(
-            {
-                "binary_accuracy": [],
-                "loss": [],
-                "val_binary_accuracy": [],
-                "val_loss": [],
-            }
-        )
-
-        federated_eval = tff.learning.build_federated_evaluation(model_fn)
-        for epoch in range(1, num_epochs + 1):
-            state, metrics = trainer.next(state, fl_train_list)
-            fed_hist["binary_accuracy"].append(
-                float(metrics["train"]["binary_accuracy"])
-            )
-            fed_hist["loss"].append(float(metrics["train"]["loss"]))
-
-            logging.info(
-                f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, auc: {float(metrics['train']['auc'])}, loss: {float(metrics['train']['loss'])}"
-            )
-
-            eval_metrics = federated_eval(state.model, fl_valid_list)
-            fed_hist["val_binary_accuracy"].append(
-                float(eval_metrics["binary_accuracy"])
-            )
-            fed_hist["val_loss"].append(float(eval_metrics["loss"]))
-            logging.info(
-                f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, auc: {float(eval_metrics['auc'])}, loss: {float(eval_metrics['loss'])}"
-            )
-
-            df_run_hists = save_metrics_in_df(
-                df_run_hists, metrics["train"], mode="train", run=i, epoch=epoch
-            )
-            df_run_hists = save_metrics_in_df(
-                df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
-            )
-
-            # save run hists per client on specific client dataset
-            for client_num, client in enumerate(client_name_list):
-                # metrics_train = evaluate_model_for_client_dataset(
-                #     state, fl_train_list[client_num]
-                # )
-                # logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
-                # per_client_df_run_hists[client] = save_metrics_in_df(
-                #     per_client_df_run_hists[client],
-                #     metrics_train,
-                #     mode="train",
-                #     run=i,
-                #     epoch=epoch,
-                # )
-                metrics_val = evaluate_model_for_client_dataset(
-                    state, fl_valid_list[client_num]
-                )
-                logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
-                per_client_df_run_hists[client] = save_metrics_in_df(
-                    per_client_df_run_hists[client],
-                    metrics_val,
-                    mode="val",
-                    run=i,
-                    epoch=epoch,
-                )
+        del execute_run
+        tf.keras.backend.clear_session()
+        gc.collect()
 
     df_run_hists.to_csv(os.path.join(output_path_for_setting, "fl_df_run_hists.csv"))
 
