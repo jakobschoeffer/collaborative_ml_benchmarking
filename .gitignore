@@ -11,3 +11,5 @@ outputs
 outputs/
 log
 log/
+
+nohup.out
