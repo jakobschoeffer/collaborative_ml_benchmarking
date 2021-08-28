@@ -17,8 +17,10 @@ def run_one_model_per_client(
     all_images_path,
     output_path_for_scenario,
     num_reruns,
-    num_epochs,
+    max_num_epochs,
     learning_rate,
+    early_stopping_patience,
+    early_stopping_monitor,
 ):
     """Executes one model per client for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -28,8 +30,10 @@ def run_one_model_per_client(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
-        num_epochs (int): number of epochs specified in config object
-        learning_rate (float): learning rate for optimizer
+        max_num_epochs (int): maximum number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer specified in config object
+        early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
+        early_stopping_monitor (str): quantity to be monitored specified in config object
     """
 
     output_path_for_setting = os.path.join(output_path_for_scenario, "client_models")
@@ -45,6 +49,12 @@ def run_one_model_per_client(
             logging.info(
                 f"Training {client} in 'one model per client' scenario, run number {i} of {num_reruns}"
             )
+
+            callback = tf.keras.callbacks.EarlyStopping(
+                monitor="val_" + early_stopping_monitor,
+                patience=early_stopping_patience,
+            )
+
             train, test, valid = per_client_train_test_valid(
                 client_dataset_dict,
                 client_name=client,
@@ -63,11 +73,19 @@ def run_one_model_per_client(
                 ],
             )
             history = client_model.fit(
-                train, validation_data=valid, batch_size=None, epochs=num_epochs
+                train,
+                validation_data=valid,
+                batch_size=None,
+                epochs=max_num_epochs,
+                callbacks=[callback],
             )
 
             df_run_hists_client_model = create_dataset_for_plotting(
                 df_run_hists_client_model, history.history, run=i
+            )
+
+            logging.info(
+                f"Early stopping rule triggered after {len(history.history['loss'])} epochs"
             )
 
         df_run_hists_client_model.to_csv(

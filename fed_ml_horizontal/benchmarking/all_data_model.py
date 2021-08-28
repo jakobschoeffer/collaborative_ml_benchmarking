@@ -18,8 +18,10 @@ def run_all_data_model(
     all_images_path,
     output_path_for_scenario,
     num_reruns,
-    num_epochs,
+    max_num_epochs,
     learning_rate,
+    early_stopping_patience,
+    early_stopping_monitor,
 ):
     """Executes all data model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -29,8 +31,10 @@ def run_all_data_model(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
-        num_epochs (int): number of epochs specified in config object
-        learning_rate (float): learning rate for optimizer
+        max_num_epochs (int): maximum number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer specified in config object
+        early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
+        early_stopping_monitor (str): quantity to be monitored specified in config object
     """
     (
         all_clients_train,
@@ -46,6 +50,10 @@ def run_all_data_model(
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
 
+        callback = tf.keras.callbacks.EarlyStopping(
+            monitor="val_" + early_stopping_monitor, patience=early_stopping_patience
+        )
+
         all_data_model = create_my_model()
         all_data_model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),  # "Adam"
@@ -59,13 +67,19 @@ def run_all_data_model(
             all_clients_train,
             validation_data=all_clients_valid,
             batch_size=None,
-            epochs=num_epochs,
+            epochs=max_num_epochs,
             verbose=1,
+            callbacks=[callback],
         )
 
         df_run_hists_all_data = create_dataset_for_plotting(
             df_run_hists_all_data, history_all_data.history, run=i
         )
+
+        logging.info(
+            f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs"
+        )
+
     df_run_hists_all_data.to_csv(
         os.path.join(output_path_for_setting, "all_data_df_run_hists.csv")
     )

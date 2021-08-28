@@ -22,8 +22,10 @@ def run_federated_model(
     all_images_path,
     output_path_for_scenario,
     num_reruns,
-    num_epochs,
+    max_num_epochs,
     learning_rate,
+    early_stopping_patience,
+    early_stopping_monitor,
 ):
     """Executes federated model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -33,8 +35,10 @@ def run_federated_model(
         all_images_path (str): path to saved images
         output_path_for_scenario (str): individual output path of executed scenario where all plots and results are saved
         num_reruns (int): number of reruns specified in config object
-        num_epochs (int): number of epochs specified in config object
-        learning_rate (float): learning rate for optimizer
+        max_num_epochs (int): maximum number of epochs specified in config object
+        learning_rate (float): learning rate for optimizer specified in config object
+        early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
+        early_stopping_monitor (str): quantity to be monitored specified in config object
     """
 
     # Data is the same for all reruns of the federated model
@@ -104,7 +108,12 @@ def run_federated_model(
             )
 
             federated_eval = tff.learning.build_federated_evaluation(model_fn)
-            for epoch in range(1, num_epochs + 1):
+            stop = False
+            epoch = 1
+            early_stopping_monitor_increasing_since = 0
+
+            while not stop:
+                # for epoch in range(1, max_num_epochs + 1):
                 state, metrics = trainer.next(state, fl_train_list)
                 fed_hist["binary_accuracy"].append(
                     float(metrics["train"]["binary_accuracy"])
@@ -155,6 +164,28 @@ def run_federated_model(
                         run=i,
                         epoch=epoch,
                     )
+
+                current_early_stopping_monitor = eval_metrics[early_stopping_monitor]
+                if epoch == 1:
+                    previous_early_stopping_monitor = (
+                        current_early_stopping_monitor + 100
+                    )
+
+                if previous_early_stopping_monitor < current_early_stopping_monitor:
+                    early_stopping_monitor_increasing_since += 1
+                else:
+                    early_stopping_monitor_increasing_since = 0
+
+                # stop if loss is increasing since early_stopping_patience epochs or max_num_epochs is reached
+                if (
+                    early_stopping_monitor_increasing_since == early_stopping_patience
+                ) or (epoch == max_num_epochs):
+                    stop = True
+                    logging.info(f"Early stopping rule triggered after {epoch} epochs")
+
+                previous_early_stopping_monitor = current_early_stopping_monitor
+
+                epoch = epoch + 1
 
             del trainer
             del state
