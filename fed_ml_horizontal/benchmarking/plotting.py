@@ -55,6 +55,11 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
     df_run_hists_agg.to_csv(os.path.join(output_path, f"{prefix}_df_run_hists_agg.csv"))
     logging.info(str(df_run_hists_agg))
 
+    palette = {
+        "train": sns.color_palette()[0],
+        "val": sns.color_palette()[1],
+    }
+
     # TODO: Add quantiles as "confidence intervals"
     for metric in df_run_hists_agg["metric"].unique():
         plt.figure()
@@ -65,6 +70,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             x="epoch",
             y="median",
             hue="train/val",
+            palette=palette,
         )  # .set_title(f"Training and validation {metric} (median)")
         g.get_figure().savefig(
             os.path.join(output_path, f"{prefix}_{metric}_median.png")
@@ -81,6 +87,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             y="value",
             hue="train/val",
             ci="sd",
+            palette=palette,
         )  # .set_title(f"Training and validation {metric} (mean, sd ci)")
         fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"))
         plt.close()
