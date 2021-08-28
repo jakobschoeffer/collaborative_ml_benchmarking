@@ -23,7 +23,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.ylim(bottom=0.7, top=1)
     plt.plot(epochs, history["binary_accuracy"])
     plt.plot(epochs, history["val_binary_accuracy"])
-    plt.title("Training and validation accuracy")
+    # plt.title("Training and validation accuracy")
     fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_acc.png"))
 
     fig = plt.figure()
@@ -32,7 +32,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.ylim(bottom=0, top=0.5)
     plt.plot(epochs, history["loss"])
     plt.plot(epochs, history["val_loss"])
-    plt.title("Training and validation loss")
+    # plt.title("Training and validation loss")
     plt.show()
     fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_loss.png"))
 
@@ -58,13 +58,14 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
     # TODO: Add quantiles as "confidence intervals"
     for metric in df_run_hists_agg["metric"].unique():
         plt.figure()
-        plt.ylim(bottom=0.7, top=1)
+        if metric not in ["loss"]:
+            plt.ylim(bottom=0.7, top=1)
         g = sns.lineplot(
             data=df_run_hists_agg[lambda x: x.metric == metric],
             x="epoch",
             y="median",
             hue="train/val",
-        ).set_title(f"Training and validation {metric} (median)")
+        )  # .set_title(f"Training and validation {metric} (median)")
         g.get_figure().savefig(
             os.path.join(output_path, f"{prefix}_{metric}_median.png")
         )
@@ -72,14 +73,15 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
 
     for metric in df_run_hists_agg["metric"].unique():
         fig = plt.figure()
-        plt.ylim(bottom=0.7, top=1)
+        if metric not in ["loss"]:
+            plt.ylim(bottom=0.7, top=1)
         sns.lineplot(
             data=df_run_hists[lambda x: x.metric == metric].drop("run", axis=1),
             x="epoch",
             y="value",
             hue="train/val",
             ci="sd",
-        ).set_title(f"Training and validation {metric} (mean, sd ci)")
+        )  # .set_title(f"Training and validation {metric} (mean, sd ci)")
         fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"))
         plt.close()
 
