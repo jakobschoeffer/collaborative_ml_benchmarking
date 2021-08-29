@@ -39,6 +39,13 @@ def run_one_model_per_client(
     output_path_for_setting = os.path.join(output_path_for_scenario, "client_models")
     os.makedirs(output_path_for_setting)
 
+    # loss decreases if betting better
+    if early_stopping_monitor == "loss":
+        mode = "min"
+    # other monitors as auc or accuracy are increasing if better better
+    else:
+        mode = "max"
+
     for client in client_dataset_dict.keys():
         output_path_for_client = os.path.join(output_path_for_setting, client)
         os.makedirs(output_path_for_client)
@@ -53,6 +60,7 @@ def run_one_model_per_client(
             callback = tf.keras.callbacks.EarlyStopping(
                 monitor="val_" + early_stopping_monitor,
                 patience=early_stopping_patience,
+                mode=mode,
             )
 
             train, test, valid = per_client_train_test_valid(
@@ -84,9 +92,14 @@ def run_one_model_per_client(
                 df_run_hists_client_model, history.history, run=i
             )
 
-            logging.info(
-                f"Early stopping rule triggered after {len(history.history['loss'])} epochs"
-            )
+            if len(history.history["loss"]) == max_num_epochs:
+                logging.info(
+                    f"Stopped after maximum number of epochs {max_num_epochs}, early stopping not triggered"
+                )
+            else:
+                logging.info(
+                    f"Early stopping rule triggered after {len(history.history['loss'])} epochs. Best epoch: {len(history.history['loss']) - early_stopping_patience}"
+                )
 
         df_run_hists_client_model.to_csv(
             os.path.join(output_path_for_client, f"{client}_df_run_hists.csv")

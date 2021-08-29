@@ -7,6 +7,7 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 import tensorflow_federated as tff
 from box import Box
+from tensorflow_federated.python.core.api import value_base
 
 from fed_ml_horizontal.benchmarking.model import create_my_model
 from fed_ml_horizontal.benchmarking.plotting import (
@@ -55,6 +56,7 @@ def run_federated_model(
 
     nest_asyncio.apply()
 
+    best_aucs = []
     for i in range(1, num_reruns + 1):
 
         def execute_run(
@@ -110,7 +112,7 @@ def run_federated_model(
             federated_eval = tff.learning.build_federated_evaluation(model_fn)
             stop = False
             epoch = 1
-            early_stopping_monitor_increasing_since = 0
+            early_stopping_monitor_in_de_creasing_since = 0
 
             while not stop:
                 # for epoch in range(1, max_num_epochs + 1):
@@ -166,22 +168,66 @@ def run_federated_model(
                     )
 
                 current_early_stopping_monitor = eval_metrics[early_stopping_monitor]
+
                 if epoch == 1:
-                    previous_early_stopping_monitor = (
-                        current_early_stopping_monitor + 100
+                    # loss decreases if betting better
+                    if early_stopping_monitor == "loss":
+                        previous_early_stopping_monitor = (
+                            current_early_stopping_monitor + 100
+                        )
+                    # other monitors as auc or accuracy are increasing if better better
+                    else:
+                        previous_early_stopping_monitor = (
+                            current_early_stopping_monitor - 100
+                        )
+
+                # loss decreases if betting better
+                if early_stopping_monitor == "loss":
+                    if previous_early_stopping_monitor < current_early_stopping_monitor:
+                        early_stopping_monitor_in_de_creasing_since += 1
+                    else:
+                        early_stopping_monitor_in_de_creasing_since = 0
+                # other monitors as auc or accuracy are increasing if better better
+                else:
+                    if previous_early_stopping_monitor > current_early_stopping_monitor:
+                        early_stopping_monitor_in_de_creasing_since += 1
+                    else:
+                        early_stopping_monitor_in_de_creasing_since = 0
+
+                # stop if monitor is increasing/decreasing since early_stopping_patience epochs or max_num_epochs is reached
+                if (
+                    early_stopping_monitor_in_de_creasing_since
+                    == early_stopping_patience
+                ):
+                    stop = True
+                    # best_auc = df_run_hists[
+                    #     lambda x: (x["train/val"] == "val")
+                    #     & (x.epoch == (epoch - early_stopping_patience))
+                    #     & (x.run == i)
+                    #     & (x.metric == "auc")
+                    # ].value
+
+                    # best_aucs.append(best_auc)
+
+                    logging.info(
+                        f"Early stopping rule triggered after {epoch} epochs. Best epoch: {epoch - early_stopping_patience}"
                     )
 
-                if previous_early_stopping_monitor < current_early_stopping_monitor:
-                    early_stopping_monitor_increasing_since += 1
-                else:
-                    early_stopping_monitor_increasing_since = 0
-
-                # stop if loss is increasing since early_stopping_patience epochs or max_num_epochs is reached
-                if (
-                    early_stopping_monitor_increasing_since == early_stopping_patience
-                ) or (epoch == max_num_epochs):
+                elif epoch == max_num_epochs:
                     stop = True
-                    logging.info(f"Early stopping rule triggered after {epoch} epochs")
+
+                    # best_auc = df_run_hists[
+                    #     lambda x: (x["train/val"] == "val")
+                    #     & (x.epoch == epoch)
+                    #     & (x.run == i)
+                    #     & (x.metric == "auc")
+                    # ].value
+
+                    # best_aucs.append(best_auc)
+
+                    logging.info(
+                        f"Stopped after maximum number of epochs {epoch}, early stopping not triggered"
+                    )
 
                 previous_early_stopping_monitor = current_early_stopping_monitor
 
@@ -223,6 +269,13 @@ def run_federated_model(
             output_path_for_client,
             prefix=f"fl_{client}",
         )
+
+
+#     plot_best_aucs(best_aucs)
+
+
+# def plot_best_aucs(best_aucs):
+#     best_aucs_series = pd.Series(best_aucs)
 
 
 def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20):

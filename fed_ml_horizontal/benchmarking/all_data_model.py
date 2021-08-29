@@ -47,11 +47,20 @@ def run_all_data_model(
 
     df_run_hists_all_data = create_empty_run_hist_df()
 
+    # loss decreases if betting better
+    if early_stopping_monitor == "loss":
+        mode = "min"
+    # other monitors as auc or accuracy are increasing if better better
+    else:
+        mode = "max"
+
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
 
         callback = tf.keras.callbacks.EarlyStopping(
-            monitor="val_" + early_stopping_monitor, patience=early_stopping_patience
+            monitor="val_" + early_stopping_monitor,
+            patience=early_stopping_patience,
+            mode=mode,
         )
 
         all_data_model = create_my_model()
@@ -76,9 +85,14 @@ def run_all_data_model(
             df_run_hists_all_data, history_all_data.history, run=i
         )
 
-        logging.info(
-            f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs"
-        )
+        if len(history_all_data.history["loss"]) == max_num_epochs:
+            logging.info(
+                f"Stopped after maximum number of epochs {max_num_epochs}, early stopping not triggered"
+            )
+        else:
+            logging.info(
+                f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs. Best epoch: {len(history_all_data.history['loss']) - early_stopping_patience}"
+            )
 
     df_run_hists_all_data.to_csv(
         os.path.join(output_path_for_setting, "all_data_df_run_hists.csv")
