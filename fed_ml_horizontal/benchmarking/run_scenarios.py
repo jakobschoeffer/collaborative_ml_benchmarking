@@ -81,7 +81,7 @@ def run_scenarios(config):
                     create_my_model().summary()
 
             logging.info("Start federated model")
-            run_federated_model(
+            results_fl = run_federated_model(
                 client_dataset_dict,
                 all_images_path,
                 output_path_for_scenario,

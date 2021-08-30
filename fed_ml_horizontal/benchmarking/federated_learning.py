@@ -56,8 +56,10 @@ def run_federated_model(
 
     nest_asyncio.apply()
 
-    best_aucs = []
+    results_fl = {}
     for i in range(1, num_reruns + 1):
+
+        results_fl[f"run_{i}"] = {}
 
         def execute_run(
             i,
@@ -142,31 +144,6 @@ def run_federated_model(
                     df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
                 )
 
-                # save run hists per client on specific client dataset
-                for client_num, client in enumerate(client_name_list):
-                    # metrics_train = evaluate_model_for_client_dataset(
-                    #     state, fl_train_list[client_num]
-                    # )
-                    # logging.info(f"epoch {epoch}: {client}: train: {metrics_train}")
-                    # per_client_df_run_hists[client] = save_metrics_in_df(
-                    #     per_client_df_run_hists[client],
-                    #     metrics_train,
-                    #     mode="train",
-                    #     run=i,
-                    #     epoch=epoch,
-                    # )
-                    metrics_val = evaluate_model_for_client_dataset(
-                        state, fl_valid_list[client_num]
-                    )
-                    logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
-                    per_client_df_run_hists[client] = save_metrics_in_df(
-                        per_client_df_run_hists[client],
-                        metrics_val,
-                        mode="val",
-                        run=i,
-                        epoch=epoch,
-                    )
-
                 current_early_stopping_monitor = eval_metrics[early_stopping_monitor]
 
                 if epoch == 1:
@@ -200,14 +177,8 @@ def run_federated_model(
                     == early_stopping_patience
                 ):
                     stop = True
-                    # best_auc = df_run_hists[
-                    #     lambda x: (x["train/val"] == "val")
-                    #     & (x.epoch == (epoch - early_stopping_patience))
-                    #     & (x.run == i)
-                    #     & (x.metric == "auc")
-                    # ].value
 
-                    # best_aucs.append(best_auc)
+                    best_epoch = epoch - early_stopping_patience
 
                     logging.info(
                         f"Early stopping rule triggered after {epoch} epochs. Best epoch: {epoch - early_stopping_patience}"
@@ -216,14 +187,7 @@ def run_federated_model(
                 elif epoch == max_num_epochs:
                     stop = True
 
-                    # best_auc = df_run_hists[
-                    #     lambda x: (x["train/val"] == "val")
-                    #     & (x.epoch == epoch)
-                    #     & (x.run == i)
-                    #     & (x.metric == "auc")
-                    # ].value
-
-                    # best_aucs.append(best_auc)
+                    best_epoch = epoch
 
                     logging.info(
                         f"Stopped after maximum number of epochs {epoch}, early stopping not triggered"
@@ -231,15 +195,56 @@ def run_federated_model(
 
                 previous_early_stopping_monitor = current_early_stopping_monitor
 
+                if stop:
+                    best_auc = df_run_hists[
+                        lambda x: (x["train/val"] == "val")
+                        & (x.epoch == best_epoch)
+                        & (x.run == i)
+                        & (x.metric == "auc")
+                    ].value.values[0]
+
+                    results_fl[f"run_{i}"]["overall"] = {
+                        "metric": "auc",
+                        "value": best_auc,
+                        "best_epoch": best_epoch,
+                    }
+
+                # save run hists per client on specific client dataset
+                for client_num, client in enumerate(client_name_list):
+                    metrics_val = evaluate_model_for_client_dataset(
+                        state, fl_valid_list[client_num]
+                    )
+                    logging.info(f"epoch {epoch}: {client}: val: {metrics_val}")
+                    per_client_df_run_hists[client] = save_metrics_in_df(
+                        per_client_df_run_hists[client],
+                        metrics_val,
+                        mode="val",
+                        run=i,
+                        epoch=epoch,
+                    )
+                    if stop:
+                        best_auc = per_client_df_run_hists[client][
+                            lambda x: (x["train/val"] == "val")
+                            & (x.epoch == best_epoch)
+                            & (x.run == i)
+                            & (x.metric == "auc")
+                        ].value.values[0]
+
+                        results_fl[f"run_{i}"][client] = {
+                            "metric": "auc",
+                            "value": best_auc,
+                            "best_epoch": best_epoch,
+                        }
+
                 epoch = epoch + 1
 
             del trainer
             del state
             del federated_eval
 
-            return df_run_hists, per_client_df_run_hists
+            return df_run_hists, per_client_df_run_hists, results_fl
 
-        df_run_hists, per_client_df_run_hists = execute_run(
+        df_run_hists, per_client_df_run_hists, results_fl = execute_run(
             i,
             per_client_df_run_hists,
             df_run_hists,
@@ -269,6 +274,7 @@ def run_federated_model(
             output_path_for_client,
             prefix=f"fl_{client}",
         )
+    return results_fl
 
 
 #     plot_best_aucs(best_aucs)

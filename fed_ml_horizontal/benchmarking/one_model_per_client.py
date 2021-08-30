@@ -45,7 +45,7 @@ def run_one_model_per_client(
     # other monitors as auc or accuracy are increasing if better better
     else:
         mode = "max"
-
+    results_one_model_per_client = {}
     for client in client_dataset_dict.keys():
         output_path_for_client = os.path.join(output_path_for_setting, client)
         os.makedirs(output_path_for_client)
