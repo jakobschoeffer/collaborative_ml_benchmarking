@@ -94,7 +94,7 @@ def run_scenarios(config):
             logging.info("Finished federated model")
 
             logging.info("Start all data model")
-            run_all_data_model(
+            results_all_data = run_all_data_model(
                 client_dataset_dict,
                 all_images_path,
                 output_path_for_scenario,

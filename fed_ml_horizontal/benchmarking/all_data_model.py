@@ -54,6 +54,7 @@ def run_all_data_model(
     else:
         mode = "max"
 
+    results_all_data = {}
     for i in range(1, num_reruns + 1):
         logging.info(f"Start run {i} out of {num_reruns} runs")
 
@@ -86,13 +87,28 @@ def run_all_data_model(
         )
 
         if len(history_all_data.history["loss"]) == max_num_epochs:
+            best_epoch = max_num_epochs
             logging.info(
-                f"Stopped after maximum number of epochs {max_num_epochs}, early stopping not triggered"
+                f"Stopped after maximum number of epochs {best_epoch}, early stopping not triggered"
             )
         else:
+            best_epoch = len(history_all_data.history["loss"]) - early_stopping_patience
             logging.info(
-                f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs. Best epoch: {len(history_all_data.history['loss']) - early_stopping_patience}"
+                f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs. Best epoch: {best_epoch}"
             )
+        results_all_data[f"run_{i}"] = {}
+        best_auc = df_run_hists_all_data[
+            lambda x: (x["train/val"] == "val")
+            & (x.epoch == best_epoch)
+            & (x.run == i)
+            & (x.metric == "auc")
+        ].value.values[0]
+
+        results_all_data[f"run_{i}"]["overall"] = {
+            "metric": "auc",
+            "value": best_auc,
+            "best_epoch": best_epoch,
+        }
 
     df_run_hists_all_data.to_csv(
         os.path.join(output_path_for_setting, "all_data_df_run_hists.csv")
@@ -102,6 +118,7 @@ def run_all_data_model(
         output_path_for_setting,
         prefix="all_data",
     )
+    return results_all_data
 
 
 def create_ds_for_all_data_model(client_dataset_dict, all_images_path, batch_size=20):
