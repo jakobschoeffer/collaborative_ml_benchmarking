@@ -4,6 +4,7 @@ import time
 import traceback
 from contextlib import redirect_stdout
 
+import pandas as pd
 import tensorflow as tf
 
 import fed_ml_horizontal.benchmarking.data_splitting as splitting
@@ -121,3 +122,18 @@ def run_scenarios(config):
         except Exception as e:
             logging.error(f"An exception occured trying to run {scenario}")
             logging.error(traceback.format_exc())
+    results_dict = {
+        "fl": results_fl,
+        "all_data": results_all_data,
+        "one_model_per_client": results_one_model_per_client,
+    }
+
+    list_of_results_dfs = []
+
+    def parse_dict(d, extract="value"):
+        df = pd.DataFrame.from_dict(d)
+        df = df.applymap(lambda x: x[extract]).transpose()
+        return df
+
+    for _, value in results_dict.items():
+        list_of_results_dfs.append(parse_dict(value))
