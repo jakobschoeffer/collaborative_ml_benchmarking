@@ -45,6 +45,7 @@ def run_one_model_per_client(
     # other monitors as auc or accuracy are increasing if better better
     else:
         mode = "max"
+
     results_one_model_per_client = {}
     for client in client_dataset_dict.keys():
         output_path_for_client = os.path.join(output_path_for_setting, client)
@@ -93,13 +94,30 @@ def run_one_model_per_client(
             )
 
             if len(history.history["loss"]) == max_num_epochs:
+                best_epoch = max_num_epochs
                 logging.info(
-                    f"Stopped after maximum number of epochs {max_num_epochs}, early stopping not triggered"
+                    f"Stopped after maximum number of epochs {best_epoch}, early stopping not triggered"
                 )
             else:
+                best_epoch = len(history.history["loss"]) - early_stopping_patience
                 logging.info(
-                    f"Early stopping rule triggered after {len(history.history['loss'])} epochs. Best epoch: {len(history.history['loss']) - early_stopping_patience}"
+                    f"Early stopping rule triggered after {len(history.history['loss'])} epochs. Best epoch: {best_epoch}"
                 )
+            if f"run_{i}" not in results_one_model_per_client.keys():
+                results_one_model_per_client[f"run_{i}"] = {}
+
+            best_auc = df_run_hists_client_model[
+                lambda x: (x["train/val"] == "val")
+                & (x.epoch == best_epoch)
+                & (x.run == i)
+                & (x.metric == "auc")
+            ].value.values[0]
+
+            results_one_model_per_client[f"run_{i}"][client] = {
+                "metric": "auc",
+                "value": best_auc,
+                "best_epoch": best_epoch,
+            }
 
         df_run_hists_client_model.to_csv(
             os.path.join(output_path_for_client, f"{client}_df_run_hists.csv")
@@ -109,6 +127,7 @@ def run_one_model_per_client(
             output_path_for_client,
             prefix=f"{client}",
         )
+    return results_one_model_per_client
 
 
 def per_client_train_test_valid(

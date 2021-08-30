@@ -107,7 +107,7 @@ def run_scenarios(config):
             logging.info("Finished all data model")
 
             logging.info("Start one model per client")
-            run_one_model_per_client(
+            results_one_model_per_client = run_one_model_per_client(
                 client_dataset_dict,
                 all_images_path,
                 output_path_for_scenario,
