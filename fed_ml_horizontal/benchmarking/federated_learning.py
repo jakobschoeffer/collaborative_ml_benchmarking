@@ -40,6 +40,9 @@ def run_federated_model(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
+
+    Returns:
+        OrderedDict: dict containing results of all runs for this settings
     """
 
     # Data is the same for all reruns of the federated model
@@ -71,6 +74,23 @@ def run_federated_model(
             fl_valid_list,
             client_name_list,
         ):
+            """executes federated learning runs
+
+            Args:
+                i (int): current run
+                per_client_df_run_hists (pandas DataFrame): df containing values of defined metrics per client for train/val over runs and epochs
+                df_run_hists (pandas DataFrame): df containing values of defined metrics for train/val over runs and epochs
+                output_path_for_setting (str): individual output path for setting
+                fl_train_list (list): lists of train datasets of all clients
+                fl_test_list (list): lists of test datasets of all clients
+                fl_valid_list (list): lists of validation datasets of all clients
+                client_name_list (list): list of all client names
+
+            Returns:
+                pandas DataFrame: df containing values of defined metrics for train/val over runs and epochs
+                pandas DataFrame: df containing values of defined metrics per client for train/val over runs and epochs
+                OrderedDict: dict containing results of all runs for this settings
+            """
             logging.info(f"Start run {i} out of {num_reruns} runs")
             # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
 
@@ -147,24 +167,24 @@ def run_federated_model(
                 current_early_stopping_monitor = eval_metrics[early_stopping_monitor]
 
                 if epoch == 1:
-                    # loss decreases if betting better
+                    # loss decreases if getting better
                     if early_stopping_monitor == "loss":
                         previous_early_stopping_monitor = (
                             current_early_stopping_monitor + 100
                         )
-                    # other monitors as auc or accuracy are increasing if better better
+                    # other monitors as auc or accuracy are increasing if getting better
                     else:
                         previous_early_stopping_monitor = (
                             current_early_stopping_monitor - 100
                         )
 
-                # loss decreases if betting better
+                # loss decreases if getting better
                 if early_stopping_monitor == "loss":
                     if previous_early_stopping_monitor < current_early_stopping_monitor:
                         early_stopping_monitor_in_de_creasing_since += 1
                     else:
                         early_stopping_monitor_in_de_creasing_since = 0
-                # other monitors as auc or accuracy are increasing if better better
+                # other monitors as auc or accuracy are increasing if getting better
                 else:
                     if previous_early_stopping_monitor > current_early_stopping_monitor:
                         early_stopping_monitor_in_de_creasing_since += 1
@@ -294,7 +314,7 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
         batch (int, optional): batch size. Defaults to 20.
 
     Returns:
-        list: lists of train, test and valid datasets of all clients
+        list: lists of train, test and valid datasets of all clients, list of all client names
     """
     fl_train_list = []  # list of datasets. one dataset per client
     fl_test_list = []

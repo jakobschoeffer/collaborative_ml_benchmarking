@@ -35,6 +35,9 @@ def run_all_data_model(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
+
+    Returns:
+        OrderedDict: dict containing results of all runs for this settings
     """
     (
         all_clients_train,
@@ -47,10 +50,10 @@ def run_all_data_model(
 
     df_run_hists_all_data = create_empty_run_hist_df()
 
-    # loss decreases if betting better
+    # loss decreases if getting better
     if early_stopping_monitor == "loss":
         mode = "min"
-    # other monitors as auc or accuracy are increasing if better better
+    # other monitors as auc or accuracy are increasing if getting better
     else:
         mode = "max"
 

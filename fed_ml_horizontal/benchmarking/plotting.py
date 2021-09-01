@@ -153,3 +153,19 @@ def create_dataset_for_plotting(df_run_hists, history, run):
                 df_run_hists = df_run_hists.append(tmp_dict, ignore_index=True)
 
     return df_run_hists
+
+
+def create_boxplots(df, output_path):
+    """Creates boxplots of performance dataframe
+
+    Args:
+        df (pandas DataFrame): df containing performance values of current scenario
+        output_path (str): individual output path
+    """
+    sns.set_style("whitegrid")
+    fig = plt.figure()
+    g = sns.boxplot(data=df.loc[lambda x: ["run" in x for x in x.index]])
+    g.set_xticklabels(g.get_xticklabels(), rotation=30)
+    fig = g.get_figure()
+    fig.savefig(os.path.join(output_path, "performance.png"), bbox_inches="tight")
+    plt.close()

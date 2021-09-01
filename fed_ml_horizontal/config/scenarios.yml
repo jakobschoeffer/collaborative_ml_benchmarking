@@ -3,11 +3,11 @@ scenarios:
     total_share: 0.4
     test_share: 0.05
     valid_share: 0.4
-    num_reruns: 4
+    num_reruns: 3
     max_num_epochs: 30
     learning_rate: 0.0005
     early_stopping_patience: 2
-    early_stopping_monitor: "auc"
+    early_stopping_monitor: "loss"
     clients:
       client_1:
         subtotal_no_pitting_share: 0.5

@@ -8,10 +8,12 @@ import pandas as pd
 import tensorflow as tf
 
 import fed_ml_horizontal.benchmarking.data_splitting as splitting
+from fed_ml_horizontal.benchmarking import summaries
 from fed_ml_horizontal.benchmarking.all_data_model import run_all_data_model
 from fed_ml_horizontal.benchmarking.federated_learning import run_federated_model
 from fed_ml_horizontal.benchmarking.model import create_my_model
 from fed_ml_horizontal.benchmarking.one_model_per_client import run_one_model_per_client
+from fed_ml_horizontal.benchmarking.plotting import create_boxplots
 
 
 def run_scenarios(config):
@@ -122,18 +124,20 @@ def run_scenarios(config):
         except Exception as e:
             logging.error(f"An exception occured trying to run {scenario}")
             logging.error(traceback.format_exc())
+
+    fl_prefix = "FL_"
+    ad_prefix = "AD_"
+    ompc_prefix = "OMPC_"
+
     results_dict = {
-        "fl": results_fl,
-        "all_data": results_all_data,
-        "one_model_per_client": results_one_model_per_client,
+        fl_prefix: results_fl,
+        ad_prefix: results_all_data,
+        ompc_prefix: results_one_model_per_client,
     }
 
-    list_of_results_dfs = []
+    df_performance = summaries.extract_performance_results(results_dict)
+    df_welfare_gains = summaries.calc_welfare_gains(
+        df_performance, ompc_prefix=ompc_prefix, fl_prefix=fl_prefix
+    )
 
-    def parse_dict(d, extract="value"):
-        df = pd.DataFrame.from_dict(d)
-        df = df.applymap(lambda x: x[extract]).transpose()
-        return df
-
-    for _, value in results_dict.items():
-        list_of_results_dfs.append(parse_dict(value))
+    create_boxplots(df=df_performance, output_path=output_path_for_scenario)

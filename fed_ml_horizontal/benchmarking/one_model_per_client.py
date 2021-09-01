@@ -34,15 +34,18 @@ def run_one_model_per_client(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
+
+    Returns:
+        OrderedDict: dict containing results of all runs for this settings
     """
 
     output_path_for_setting = os.path.join(output_path_for_scenario, "client_models")
     os.makedirs(output_path_for_setting)
 
-    # loss decreases if betting better
+    # loss decreases if getting better
     if early_stopping_monitor == "loss":
         mode = "min"
-    # other monitors as auc or accuracy are increasing if better better
+    # other monitors as auc or accuracy are increasing if getting better
     else:
         mode = "max"
 
