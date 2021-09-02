@@ -1,13 +1,16 @@
+import os
+
 import pandas as pd
 
 
-def calc_welfare_gains(df, ompc_prefix, fl_prefix):
+def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
     """calculates welfare gains per client and overall
 
     Args:
         df (pandas DataFrame): df containing performance values of current scenario
         ompc_prefix (str): prefix for 'one model per client' setting
         fl_prefix (str): prefix for 'federated learning' setting
+        output_path (str): individual output path
 
     Returns:
         pandas DataFrame: df containing welfare gains per client and overall
@@ -44,14 +47,18 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix):
     df_wg.loc[:, "mean"] = df_wg[clients].mean(axis=1)
     df_wg.loc[:, "sum"] = df_wg[clients].sum(axis=1)
 
+    # save df as csv
+    df_wg.to_csv(os.path.join(output_path, "welfare_gains.csv"))
+
     return df_wg
 
 
-def extract_performance_results(results_dict):
+def extract_performance_results(results_dict, output_path):
     """extracts performance results of all settings and runs from dictionary and calculates mean and standard deviation over all runs
 
     Args:
         results_dict (OrderedDict): dict containing results of all runs for all settings
+        output_path (str): individual output path
 
     Returns:
         pandas DataFrame: df containing performance values of current scenario
@@ -71,5 +78,8 @@ def extract_performance_results(results_dict):
 
     df_performance.loc["mean"] = df_performance.mean()
     df_performance.loc["sd"] = df_performance[lambda x: x.index != "mean"].std()
+
+    # save df as csv
+    df_performance.to_csv(os.path.join(output_path, "performance.csv"))
 
     return df_performance

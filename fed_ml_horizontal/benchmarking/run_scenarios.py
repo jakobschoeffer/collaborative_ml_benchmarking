@@ -135,9 +135,14 @@ def run_scenarios(config):
         ompc_prefix: results_one_model_per_client,
     }
 
-    df_performance = summaries.extract_performance_results(results_dict)
+    df_performance = summaries.extract_performance_results(
+        results_dict, output_path=output_path_for_scenario
+    )
     df_welfare_gains = summaries.calc_welfare_gains(
-        df_performance, ompc_prefix=ompc_prefix, fl_prefix=fl_prefix
+        df_performance,
+        ompc_prefix=ompc_prefix,
+        fl_prefix=fl_prefix,
+        output_path=output_path_for_scenario,
     )
 
     create_boxplots(df=df_performance, output_path=output_path_for_scenario)
