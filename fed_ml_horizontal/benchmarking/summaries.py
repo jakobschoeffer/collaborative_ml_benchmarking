@@ -50,6 +50,10 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
     # save df as csv
     df_wg.to_csv(os.path.join(output_path, "welfare_gains.csv"))
 
+    # save as latex file
+    with open(os.path.join(output_path, "performance.tex"), "w") as tf:
+        tf.write(df_wg.to_latex())
+
     return df_wg
 
 
@@ -81,5 +85,9 @@ def extract_performance_results(results_dict, output_path):
 
     # save df as csv
     df_performance.to_csv(os.path.join(output_path, "performance.csv"))
+
+    # save as latex file
+    with open(os.path.join(output_path, "performance.tex"), "w") as tf:
+        tf.write(df_performance.to_latex())
 
     return df_performance

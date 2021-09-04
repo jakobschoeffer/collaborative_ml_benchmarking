@@ -121,28 +121,29 @@ def run_scenarios(config):
                 early_stopping_monitor=scenario_config.early_stopping_monitor,
             )
             logging.info("Finished one model per client")
+
+            fl_prefix = "FL_"
+            ad_prefix = "AD_"
+            ompc_prefix = "OMPC_"
+
+            results_dict = {
+                fl_prefix: results_fl,
+                ad_prefix: results_all_data,
+                ompc_prefix: results_one_model_per_client,
+            }
+
+            df_performance = summaries.extract_performance_results(
+                results_dict, output_path=output_path_for_scenario
+            )
+            df_welfare_gains = summaries.calc_welfare_gains(
+                df_performance,
+                ompc_prefix=ompc_prefix,
+                fl_prefix=fl_prefix,
+                output_path=output_path_for_scenario,
+            )
+
+            create_boxplots(df=df_performance, output_path=output_path_for_scenario)
+
         except Exception as e:
             logging.error(f"An exception occured trying to run {scenario}")
             logging.error(traceback.format_exc())
-
-    fl_prefix = "FL_"
-    ad_prefix = "AD_"
-    ompc_prefix = "OMPC_"
-
-    results_dict = {
-        fl_prefix: results_fl,
-        ad_prefix: results_all_data,
-        ompc_prefix: results_one_model_per_client,
-    }
-
-    df_performance = summaries.extract_performance_results(
-        results_dict, output_path=output_path_for_scenario
-    )
-    df_welfare_gains = summaries.calc_welfare_gains(
-        df_performance,
-        ompc_prefix=ompc_prefix,
-        fl_prefix=fl_prefix,
-        output_path=output_path_for_scenario,
-    )
-
-    create_boxplots(df=df_performance, output_path=output_path_for_scenario)

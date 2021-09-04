@@ -3,27 +3,167 @@ scenarios:
     total_share: 1.0
     test_share: 0.05
     valid_share: 0.4
-    num_reruns: 5
+    num_reruns: 3
     max_num_epochs: 30
     learning_rate: 0.0005
     early_stopping_patience: 2
     early_stopping_monitor: "loss"
     clients:
       client_1:
-        subtotal_no_pitting_share: 0.138
-        subtotal_pitting_share: 0.552
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5
       client_2:
-        subtotal_no_pitting_share: 0.552
-        subtotal_pitting_share: 0.138
-      client_3:
-        subtotal_no_pitting_share: 0.034
-        subtotal_pitting_share: 0.138
-      client_4:
-        subtotal_no_pitting_share: 0.138
-        subtotal_pitting_share: 0.034
-      client_5:
-        subtotal_no_pitting_share: 0.034
-        subtotal_pitting_share: 0.138
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5
+  # scenario_2:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.8
+  #       subtotal_pitting_share: 0.8
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  # scenario_3:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.8
+  #       subtotal_pitting_share: 0.2
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.8
+  # scenario_4:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients: # insgesamt 1.25 (von 2) Daten verteilt
+  #     client_1: # Anz Daten: 1 (1.25) -> 80% der in diesem Setting verwendeten Daten, Anteil Pitting: 80%
+  #       subtotal_no_pitting_share: 0.235
+  #       subtotal_pitting_share: 0.941
+  #     client_2: # Anz Daten: 0.25 (von 1.25), Anteil No Pitting: 80%
+  #       subtotal_no_pitting_share: 0.235
+  #       subtotal_pitting_share: 0.059
+
+  # scenario_1:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  #     client_3:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  #     client_4:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  #     client_5:
+  #       subtotal_no_pitting_share: 0.2
+  #       subtotal_pitting_share: 0.2
+  # scenario_2:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.3636
+  #       subtotal_pitting_share: 0.3636
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.3636
+  #       subtotal_pitting_share: 0.3636
+  #     client_3:
+  #       subtotal_no_pitting_share: 0.0909
+  #       subtotal_pitting_share: 0.0909
+  #     client_4:
+  #       subtotal_no_pitting_share: 0.0909
+  #       subtotal_pitting_share: 0.0909
+  #     client_5:
+  #       subtotal_no_pitting_share: 0.0909
+  #       subtotal_pitting_share: 0.0909
+  # scenario_3:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.071
+  #       subtotal_pitting_share: 0.286
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.286
+  #       subtotal_pitting_share: 0.071
+  #     client_3:
+  #       subtotal_no_pitting_share: 0.071
+  #       subtotal_pitting_share: 0.286
+  #     client_4:
+  #       subtotal_no_pitting_share: 0.286
+  #       subtotal_pitting_share: 0.071
+  #     client_5:
+  #       subtotal_no_pitting_share: 0.071
+  #       subtotal_pitting_share: 0.286
+  # scenario_4:
+  #   total_share: 1.0
+  #   test_share: 0.05
+  #   valid_share: 0.4
+  #   num_reruns: 5
+  #   max_num_epochs: 30
+  #   learning_rate: 0.0005
+  #   early_stopping_patience: 2
+  #   early_stopping_monitor: "loss"
+  #   clients:
+  #     client_1:
+  #       subtotal_no_pitting_share: 0.138
+  #       subtotal_pitting_share: 0.552
+  #     client_2:
+  #       subtotal_no_pitting_share: 0.552
+  #       subtotal_pitting_share: 0.138
+  #     client_3:
+  #       subtotal_no_pitting_share: 0.034
+  #       subtotal_pitting_share: 0.138
+  #     client_4:
+  #       subtotal_no_pitting_share: 0.138
+  #       subtotal_pitting_share: 0.034
+  #     client_5:
+  #       subtotal_no_pitting_share: 0.034
+  #       subtotal_pitting_share: 0.138
   # scenario_1:
   #   total_share: 0.4
   #   test_share: 0.05
