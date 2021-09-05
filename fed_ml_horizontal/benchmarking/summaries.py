@@ -51,7 +51,7 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
     df_wg.to_csv(os.path.join(output_path, "welfare_gains.csv"))
 
     # save as latex file
-    with open(os.path.join(output_path, "performance.tex"), "w") as tf:
+    with open(os.path.join(output_path, "welfare_gains.tex"), "w") as tf:
         tf.write(df_wg.to_latex())
 
     return df_wg
