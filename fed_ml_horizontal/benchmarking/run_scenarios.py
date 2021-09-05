@@ -74,6 +74,7 @@ def run_scenarios(config):
                 test_share=scenario_config.test_share,
                 valid_share=scenario_config.valid_share,
                 client_split_dict=scenario_config.clients,
+                unified_test_dataset=config.project.unified_test_dataset,
             )
 
             # save model summary
@@ -93,6 +94,7 @@ def run_scenarios(config):
                 learning_rate=scenario_config.learning_rate,
                 early_stopping_patience=scenario_config.early_stopping_patience,
                 early_stopping_monitor=scenario_config.early_stopping_monitor,
+                unified_test_dataset=config.project.unified_test_dataset,
             )
             logging.info("Finished federated model")
 
@@ -106,6 +108,7 @@ def run_scenarios(config):
                 learning_rate=scenario_config.learning_rate,
                 early_stopping_patience=scenario_config.early_stopping_patience,
                 early_stopping_monitor=scenario_config.early_stopping_monitor,
+                unified_test_dataset=config.project.unified_test_dataset,
             )
             logging.info("Finished all data model")
 

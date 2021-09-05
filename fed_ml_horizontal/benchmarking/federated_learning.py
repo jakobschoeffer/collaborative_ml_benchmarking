@@ -27,6 +27,7 @@ def run_federated_model(
     learning_rate,
     early_stopping_patience,
     early_stopping_monitor,
+    unified_test_dataset,
 ):
     """Executes federated model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -73,6 +74,7 @@ def run_federated_model(
             fl_test_list,
             fl_valid_list,
             client_name_list,
+            unified_test_dataset,
         ):
             """executes federated learning runs
 
@@ -85,6 +87,7 @@ def run_federated_model(
                 fl_test_list (list): lists of test datasets of all clients
                 fl_valid_list (list): lists of validation datasets of all clients
                 client_name_list (list): list of all client names
+                unified_test_dataset # TODO add
 
             Returns:
                 pandas DataFrame: df containing values of defined metrics for train/val over runs and epochs
@@ -141,7 +144,10 @@ def run_federated_model(
                 )
 
                 # test
-                test_metrics = federated_eval(state.model, fl_test_list)
+                if not unified_test_dataset:
+                    test_metrics = federated_eval(state.model, fl_test_list)
+                else:
+                    test_metrics = federated_eval(state.model, [fl_test_list[0]])
                 logging.info(
                     f"epoch {epoch}: test: binary accuracy: {float(test_metrics['binary_accuracy'])}, auc: {float(test_metrics['auc'])}, loss: {float(test_metrics['loss'])}"
                 )
@@ -283,6 +289,7 @@ def run_federated_model(
             fl_test_list,
             fl_valid_list,
             client_name_list,
+            unified_test_dataset,
         )
 
         del execute_run

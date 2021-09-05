@@ -1,12 +1,12 @@
 scenarios:
 # 2 clients, 4 scenarios
   scenario_1:
-    total_share: 0.2
+    total_share: 1
     valid_share: 0.2
     test_share: 0.4
-    num_reruns: 2
-    max_num_epochs: 3
-    learning_rate: 0.001
+    num_reruns: 5
+    max_num_epochs: 30
+    learning_rate: 0.0005
     early_stopping_patience: 2
     early_stopping_monitor: "loss"
     clients:

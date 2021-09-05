@@ -54,8 +54,9 @@ def make_client_split(
     no_pitting_image_list,
     client_split_dict,
     total_share=1,
-    test_share=0.05,
+    test_share=0.2,
     valid_share=0.2,
+    unified_test_dataset=False,
 ):
     """Makes clients splits for train, test and valid images according to config object.
 
@@ -66,6 +67,7 @@ def make_client_split(
         total_share (int, optional): share of all images that should be used in certain scenario. Defined in config. Defaults to 1.
         test_share (float, optional): test share that should be used in certain scenario. Defined in config. Defaults to 0.2.
         valid_share (float, optional): valid share that should be used in certain scenario. Defined in config. Defaults to 0.05.
+        unified_test_dataset TODO ADD
 
     Returns:
         dict: dictionary containing filenames of selected total, train, test, valid images (pitting and no_pitting) for each client
@@ -75,76 +77,168 @@ def make_client_split(
     random.shuffle(no_pitting_image_list)
     len_no_pitting = math.floor(len(no_pitting_image_list) * total_share)
 
-    last_pos_pitting = 0
-    last_pos_no_pitting = 0
     all_clients_data_dict = {}
-
-    for client_name, client_share_dict in client_split_dict.items():
-        num_pitting_images_for_client = math.floor(
-            len_pitting * client_share_dict["subtotal_pitting_share"]
-        )
-        num_no_pitting_images_for_client = math.floor(
-            len_no_pitting * client_share_dict["subtotal_no_pitting_share"]
-        )
-
-        total_pitting = pitting_image_list[
-            last_pos_pitting : (last_pos_pitting + num_pitting_images_for_client)
-        ]
-        last_pos_pitting += num_pitting_images_for_client
-
-        total_no_pitting = no_pitting_image_list[
-            last_pos_no_pitting : (
-                last_pos_no_pitting + num_no_pitting_images_for_client
+    if not unified_test_dataset:
+        last_pos_pitting = 0
+        last_pos_no_pitting = 0
+        for client_name, client_share_dict in client_split_dict.items():
+            num_pitting_images_for_client = math.floor(
+                len_pitting * client_share_dict["subtotal_pitting_share"]
             )
-        ]
-        last_pos_no_pitting += num_no_pitting_images_for_client
+            num_no_pitting_images_for_client = math.floor(
+                len_no_pitting * client_share_dict["subtotal_no_pitting_share"]
+            )
 
-        train_len_pitting = math.floor(
-            len(total_pitting) * (1 - test_share - valid_share)
-        )
-        test_len_pitting = math.floor(len(total_pitting) * test_share)
-        valid_len_pitting = math.floor(len(total_pitting) * valid_share)
+            total_pitting_images_for_client = pitting_image_list[
+                last_pos_pitting : (last_pos_pitting + num_pitting_images_for_client)
+            ]
+            last_pos_pitting += num_pitting_images_for_client
 
-        train_len_no_pitting = math.floor(
-            len(total_no_pitting) * (1 - test_share - valid_share)
-        )
-        test_len_no_pitting = math.floor(len(total_no_pitting) * test_share)
-        valid_len_no_pitting = math.floor(len(total_no_pitting) * valid_share)
+            total_no_pitting_images_for_client = no_pitting_image_list[
+                last_pos_no_pitting : (
+                    last_pos_no_pitting + num_no_pitting_images_for_client
+                )
+            ]
+            last_pos_no_pitting += num_no_pitting_images_for_client
 
-        client_data_dict = {
-            client_name: {
-                "total": {"pitting": total_pitting, "no_pitting": total_no_pitting},
-                "train": {
-                    "pitting": total_pitting[0:train_len_pitting],
-                    "no_pitting": total_no_pitting[0:train_len_no_pitting],
-                },
-                "test": {
-                    "pitting": total_pitting[
-                        train_len_pitting : train_len_pitting + test_len_pitting
-                    ],
-                    "no_pitting": total_no_pitting[
-                        train_len_no_pitting : train_len_no_pitting
-                        + test_len_no_pitting
-                    ],
-                },
-                "valid": {
-                    "pitting": total_pitting[
-                        train_len_pitting
-                        + test_len_pitting : train_len_pitting
-                        + test_len_pitting
-                        + valid_len_pitting
-                    ],
-                    "no_pitting": total_no_pitting[
-                        train_len_no_pitting
-                        + test_len_no_pitting : train_len_no_pitting
-                        + test_len_no_pitting
-                        + valid_len_no_pitting
-                    ],
+            train_len_pitting = math.floor(
+                len(total_pitting_images_for_client) * (1 - test_share - valid_share)
+            )
+            test_len_pitting = math.floor(
+                len(total_pitting_images_for_client) * test_share
+            )
+            valid_len_pitting = math.floor(
+                len(total_pitting_images_for_client) * valid_share
+            )
+
+            train_len_no_pitting = math.floor(
+                len(total_no_pitting_images_for_client) * (1 - test_share - valid_share)
+            )
+            test_len_no_pitting = math.floor(
+                len(total_no_pitting_images_for_client) * test_share
+            )
+            valid_len_no_pitting = math.floor(
+                len(total_no_pitting_images_for_client) * valid_share
+            )
+
+            client_data_dict = {
+                client_name: {
+                    "total": {
+                        "pitting": total_pitting_images_for_client,
+                        "no_pitting": total_no_pitting_images_for_client,
+                    },
+                    "train": {
+                        "pitting": total_pitting_images_for_client[0:train_len_pitting],
+                        "no_pitting": total_no_pitting_images_for_client[
+                            0:train_len_no_pitting
+                        ],
+                    },
+                    "test": {
+                        "pitting": total_pitting_images_for_client[
+                            train_len_pitting : train_len_pitting + test_len_pitting
+                        ],
+                        "no_pitting": total_no_pitting_images_for_client[
+                            train_len_no_pitting : train_len_no_pitting
+                            + test_len_no_pitting
+                        ],
+                    },
+                    "valid": {
+                        "pitting": total_pitting_images_for_client[
+                            train_len_pitting
+                            + test_len_pitting : train_len_pitting
+                            + test_len_pitting
+                            + valid_len_pitting
+                        ],
+                        "no_pitting": total_no_pitting_images_for_client[
+                            train_len_no_pitting
+                            + test_len_no_pitting : train_len_no_pitting
+                            + test_len_no_pitting
+                            + valid_len_no_pitting
+                        ],
+                    },
+                }
+            }
+
+            all_clients_data_dict.update(client_data_dict)
+    else:
+        test_len_pitting = math.floor(len_pitting * test_share)
+        test_len_no_pitting = math.floor(len_no_pitting * test_share)
+        # subtract test images from available number of training and val images
+        len_pitting = len_pitting - test_len_pitting
+        len_no_pitting = len_no_pitting - test_len_no_pitting
+
+        test_pitting_images = pitting_image_list[0:test_len_pitting]
+        test_no_pitting_images = no_pitting_image_list[0:test_len_no_pitting]
+
+        last_pos_pitting = test_len_pitting
+        last_pos_no_pitting = test_len_no_pitting
+
+        # calc and set train valid and test for each client
+        for client_name, client_share_dict in client_split_dict.items():
+            num_pitting_images_for_client = math.floor(
+                len_pitting * client_share_dict["subtotal_pitting_share"]
+            )
+            num_no_pitting_images_for_client = math.floor(
+                len_no_pitting * client_share_dict["subtotal_no_pitting_share"]
+            )
+
+            total_pitting_images_for_client = pitting_image_list[
+                last_pos_pitting : (last_pos_pitting + num_pitting_images_for_client)
+            ]
+            last_pos_pitting += num_pitting_images_for_client
+
+            total_no_pitting_images_for_client = no_pitting_image_list[
+                last_pos_no_pitting : (
+                    last_pos_no_pitting + num_no_pitting_images_for_client
+                )
+            ]
+            last_pos_no_pitting += num_no_pitting_images_for_client
+
+            train_len_pitting = math.floor(
+                len(total_pitting_images_for_client) * (1 - valid_share)
+            )
+            valid_len_pitting = math.floor(
+                len(total_pitting_images_for_client) * valid_share
+            )
+
+            train_len_no_pitting = math.floor(
+                len(total_no_pitting_images_for_client) * (1 - valid_share)
+            )
+            valid_len_no_pitting = math.floor(
+                len(total_no_pitting_images_for_client) * valid_share
+            )
+
+            client_data_dict = {
+                client_name: {
+                    "total": {
+                        "pitting": total_pitting_images_for_client
+                        + test_pitting_images,
+                        "no_pitting": total_no_pitting_images_for_client
+                        + test_no_pitting_images,
+                    },
+                    "train": {
+                        "pitting": total_pitting_images_for_client[0:train_len_pitting],
+                        "no_pitting": total_no_pitting_images_for_client[
+                            0:train_len_no_pitting
+                        ],
+                    },
+                    "valid": {
+                        "pitting": total_pitting_images_for_client[
+                            train_len_pitting : train_len_pitting + valid_len_pitting
+                        ],
+                        "no_pitting": total_no_pitting_images_for_client[
+                            train_len_no_pitting : train_len_no_pitting
+                            + valid_len_no_pitting
+                        ],
+                    },
+                    "test": {
+                        "pitting": test_pitting_images,
+                        "no_pitting": test_no_pitting_images,
+                    },
                 },
             }
-        }
 
-        all_clients_data_dict.update(client_data_dict)
+            all_clients_data_dict.update(client_data_dict)
 
     return all_clients_data_dict
 
@@ -169,6 +263,7 @@ def create_client_dataset_dict(
     total_share=1,
     test_share=0.05,
     valid_share=0.2,
+    unified_test_dataset=False,
 ):
     """Creats dictionary containing filenames of selected total, train, test, valid images (pitting and no_pitting) for each client.
     Executes check for valid pitting and no_pitting shares.
@@ -189,7 +284,7 @@ def create_client_dataset_dict(
     specified_args = locals()
     write_specified_args(specified_args, output_dir, "client_dataset_spec.txt")
 
-    check_client_split_dict_valid(client_split_dict)
+    check_client_split_dict_valid(client_split_dict)  # TODO CHeck if correct
     (
         pitting_image_list,
         no_pitting_image_list,
@@ -202,5 +297,6 @@ def create_client_dataset_dict(
         total_share,
         test_share,
         valid_share,
+        unified_test_dataset,
     )
     return client_dataset_dict, all_images_path

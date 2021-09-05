@@ -22,6 +22,7 @@ def run_all_data_model(
     learning_rate,
     early_stopping_patience,
     early_stopping_monitor,
+    unified_test_dataset,
 ):
     """Executes all data model for defined number of runs.
     Calculates performance metrics for each epoch and generates and saves results and plots.
@@ -35,7 +36,7 @@ def run_all_data_model(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
-
+        unified_test_dataset TODO Add
     Returns:
         OrderedDict: dict containing results of all runs for this settings
     """
@@ -43,7 +44,9 @@ def run_all_data_model(
         all_clients_train,
         all_clients_test,
         all_clients_valid,
-    ) = create_ds_for_all_data_model(client_dataset_dict, all_images_path)
+    ) = create_ds_for_all_data_model(
+        client_dataset_dict, all_images_path, unified_test_dataset
+    )
 
     output_path_for_setting = os.path.join(output_path_for_scenario, "all_data")
     os.makedirs(output_path_for_setting)
@@ -123,7 +126,9 @@ def run_all_data_model(
     return results_all_data
 
 
-def create_ds_for_all_data_model(client_dataset_dict, all_images_path, batch_size=20):
+def create_ds_for_all_data_model(
+    client_dataset_dict, all_images_path, unified_test_dataset, batch_size=20
+):
     """Creates train, test and valid datasets for all data model for all clients
 
     Args:
@@ -145,15 +150,6 @@ def create_ds_for_all_data_model(client_dataset_dict, all_images_path, batch_siz
         batch_size
     )
 
-    all_clients_test_list = [
-        create_tf_dataset(client_dataset_dict[client_name]["test"], all_images_path)
-        for client_name in client_dataset_dict.keys()
-    ]
-    all_clients_test = all_clients_test_list[0]
-    for ds in all_clients_test_list[1:]:
-        all_clients_test = all_clients_test.concatenate(ds)
-    all_clients_test = all_clients_test.shuffle(len(all_clients_test)).batch(batch_size)
-
     all_clients_valid_list = [
         create_tf_dataset(client_dataset_dict[client_name]["valid"], all_images_path)
         for client_name in client_dataset_dict.keys()
@@ -164,5 +160,25 @@ def create_ds_for_all_data_model(client_dataset_dict, all_images_path, batch_siz
     all_clients_valid = all_clients_valid.shuffle(len(all_clients_valid)).batch(
         batch_size
     )
+
+    if not unified_test_dataset:
+        all_clients_test_list = [
+            create_tf_dataset(client_dataset_dict[client_name]["test"], all_images_path)
+            for client_name in client_dataset_dict.keys()
+        ]
+        all_clients_test = all_clients_test_list[0]
+        for ds in all_clients_test_list[1:]:
+            all_clients_test = all_clients_test.concatenate(ds)
+        all_clients_test = all_clients_test.shuffle(len(all_clients_test)).batch(
+            batch_size
+        )
+    else:
+        all_clients_test = create_tf_dataset(
+            client_dataset_dict[list(client_dataset_dict.keys())[0]]["test"],
+            all_images_path,
+        )
+        all_clients_test = all_clients_test.shuffle(len(all_clients_test)).batch(
+            batch_size
+        )
 
     return all_clients_train, all_clients_test, all_clients_valid
