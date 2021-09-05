@@ -1,21 +1,21 @@
 scenarios:
 # 2 clients, 4 scenarios
-#   scenario_1:
-#     total_share: 1.0
-#     test_share: 0.05
-#     valid_share: 0.4
-#     num_reruns: 5
-#     max_num_epochs: 30
-#     learning_rate: 0.0005
-#     early_stopping_patience: 2
-#     early_stopping_monitor: "loss"
-#     clients:
-#       client_1:
-#         subtotal_no_pitting_share: 0.5
-#         subtotal_pitting_share: 0.5
-#       client_2:
-#         subtotal_no_pitting_share: 0.5
-#         subtotal_pitting_share: 0.5
+  scenario_1:
+    total_share: 0.2
+    valid_share: 0.2
+    test_share: 0.4
+    num_reruns: 2
+    max_num_epochs: 3
+    learning_rate: 0.001
+    early_stopping_patience: 2
+    early_stopping_monitor: "loss"
+    clients:
+      client_1:
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5
+      client_2:
+        subtotal_no_pitting_share: 0.5
+        subtotal_pitting_share: 0.5
 #   scenario_2:
 #     total_share: 1.0
 #     test_share: 0.05
@@ -140,31 +140,31 @@ scenarios:
 #       client_5:
 #         subtotal_no_pitting_share: 0.071
 #         subtotal_pitting_share: 0.286
-  scenario_8:
-    total_share: 1.0
-    test_share: 0.05
-    valid_share: 0.4
-    num_reruns: 5
-    max_num_epochs: 30
-    learning_rate: 0.0005
-    early_stopping_patience: 2
-    early_stopping_monitor: "loss"
-    clients:
-      client_1:
-        subtotal_no_pitting_share: 0.138
-        subtotal_pitting_share: 0.552
-      client_2:
-        subtotal_no_pitting_share: 0.552
-        subtotal_pitting_share: 0.138
-      client_3:
-        subtotal_no_pitting_share: 0.034
-        subtotal_pitting_share: 0.138
-      client_4:
-        subtotal_no_pitting_share: 0.138
-        subtotal_pitting_share: 0.034
-      client_5:
-        subtotal_no_pitting_share: 0.034
-        subtotal_pitting_share: 0.138
+# scenario_8:
+#   total_share: 1.0
+#   test_share: 0.05
+#   valid_share: 0.4
+#   num_reruns: 5
+#   max_num_epochs: 30
+#   learning_rate: 0.0005
+#   early_stopping_patience: 2
+#   early_stopping_monitor: "loss"
+#   clients:
+#     client_1:
+#       subtotal_no_pitting_share: 0.138
+#       subtotal_pitting_share: 0.552
+#     client_2:
+#       subtotal_no_pitting_share: 0.552
+#       subtotal_pitting_share: 0.138
+#     client_3:
+#       subtotal_no_pitting_share: 0.034
+#       subtotal_pitting_share: 0.138
+#     client_4:
+#       subtotal_no_pitting_share: 0.138
+#       subtotal_pitting_share: 0.034
+#     client_5:
+#       subtotal_no_pitting_share: 0.034
+#       subtotal_pitting_share: 0.138
 # old
   # scenario_1:
   #   total_share: 0.4

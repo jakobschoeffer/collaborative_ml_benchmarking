@@ -65,17 +65,19 @@ def run_all_data_model(
             monitor="val_" + early_stopping_monitor,
             patience=early_stopping_patience,
             mode=mode,
+            restore_best_weights=True,
         )
 
         all_data_model = create_my_model()
         all_data_model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),  # "Adam"
             loss=tf.keras.losses.BinaryCrossentropy(),
-            metrics=[
+            metrics=[  # DONT CHANGE THE ORDER!
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.AUC(name="auc"),
             ],
         )
+        # train and val
         history_all_data = all_data_model.fit(
             all_clients_train,
             validation_data=all_clients_valid,
@@ -99,17 +101,14 @@ def run_all_data_model(
             logging.info(
                 f"Early stopping rule triggered after {len(history_all_data.history['loss'])} epochs. Best epoch: {best_epoch}"
             )
-        results_all_data[f"run_{i}"] = {}
-        best_auc = df_run_hists_all_data[
-            lambda x: (x["train/val"] == "val")
-            & (x.epoch == best_epoch)
-            & (x.run == i)
-            & (x.metric == "auc")
-        ].value.values[0]
 
+        # test
+        test_auc = all_data_model.evaluate(all_clients_test)[2]
+        logging.info(f"Test AUC: {test_auc}")
+        results_all_data[f"run_{i}"] = {}
         results_all_data[f"run_{i}"]["overall"] = {
             "metric": "auc",
-            "value": best_auc,
+            "value": test_auc,
             "best_epoch": best_epoch,
         }
 

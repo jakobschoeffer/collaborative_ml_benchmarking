@@ -58,6 +58,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
     palette = {
         "train": sns.color_palette()[0],
         "val": sns.color_palette()[1],
+        # "test": sns.color_palette()[2],
     }
 
     # TODO: Add quantiles as "confidence intervals"
@@ -66,7 +67,9 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
         if metric not in ["loss"]:
             plt.ylim(bottom=0.7, top=1)
         g = sns.lineplot(
-            data=df_run_hists_agg[lambda x: x.metric == metric],
+            data=df_run_hists_agg[
+                lambda x: (x.metric == metric) & (x["train/val"].isin(["train", "val"]))
+            ],
             x="epoch",
             y="median",
             hue="train/val",
@@ -82,7 +85,9 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
         if metric not in ["loss"]:
             plt.ylim(bottom=0.7, top=1)
         sns.lineplot(
-            data=df_run_hists[lambda x: x.metric == metric].drop("run", axis=1),
+            data=df_run_hists[
+                lambda x: (x.metric == metric) & (x["train/val"].isin(["train", "val"]))
+            ].drop("run", axis=1),
             x="epoch",
             y="value",
             hue="train/val",

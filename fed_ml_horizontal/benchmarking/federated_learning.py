@@ -122,50 +122,44 @@ def run_federated_model(
             # nest_asyncio.apply()
             state = trainer.initialize()
 
-            fed_hist = Box(
-                {
-                    "binary_accuracy": [],
-                    "loss": [],
-                    "val_binary_accuracy": [],
-                    "val_loss": [],
-                }
-            )
-
             federated_eval = tff.learning.build_federated_evaluation(model_fn)
             stop = False
             epoch = 1
             early_stopping_monitor_in_de_creasing_since = 0
 
             while not stop:
-                # for epoch in range(1, max_num_epochs + 1):
+                # train
                 state, metrics = trainer.next(state, fl_train_list)
-                fed_hist["binary_accuracy"].append(
-                    float(metrics["train"]["binary_accuracy"])
-                )
-                fed_hist["loss"].append(float(metrics["train"]["loss"]))
-
                 logging.info(
                     f"epoch {epoch}: train: binary accuracy: {float(metrics['train']['binary_accuracy'])}, auc: {float(metrics['train']['auc'])}, loss: {float(metrics['train']['loss'])}"
                 )
 
-                eval_metrics = federated_eval(state.model, fl_valid_list)
-                fed_hist["val_binary_accuracy"].append(
-                    float(eval_metrics["binary_accuracy"])
-                )
-                fed_hist["val_loss"].append(float(eval_metrics["loss"]))
+                # val
+                val_metrics = federated_eval(state.model, fl_valid_list)
                 logging.info(
-                    f"epoch {epoch}: val: binary accuracy: {float(eval_metrics['binary_accuracy'])}, auc: {float(eval_metrics['auc'])}, loss: {float(eval_metrics['loss'])}"
+                    f"epoch {epoch}: val: binary accuracy: {float(val_metrics['binary_accuracy'])}, auc: {float(val_metrics['auc'])}, loss: {float(val_metrics['loss'])}"
                 )
 
+                # test
+                test_metrics = federated_eval(state.model, fl_test_list)
+                logging.info(
+                    f"epoch {epoch}: test: binary accuracy: {float(test_metrics['binary_accuracy'])}, auc: {float(test_metrics['auc'])}, loss: {float(test_metrics['loss'])}"
+                )
+
+                # save metrics in df_run_hists dataframe
                 df_run_hists = save_metrics_in_df(
                     df_run_hists, metrics["train"], mode="train", run=i, epoch=epoch
                 )
                 df_run_hists = save_metrics_in_df(
-                    df_run_hists, eval_metrics, mode="val", run=i, epoch=epoch
+                    df_run_hists, val_metrics, mode="val", run=i, epoch=epoch
+                )
+                df_run_hists = save_metrics_in_df(
+                    df_run_hists, test_metrics, mode="test", run=i, epoch=epoch
                 )
 
-                current_early_stopping_monitor = eval_metrics[early_stopping_monitor]
+                current_early_stopping_monitor = val_metrics[early_stopping_monitor]
 
+                # set initial values in epoch 1
                 if epoch == 1:
                     # loss decreases if getting better
                     if early_stopping_monitor == "loss":
@@ -217,7 +211,7 @@ def run_federated_model(
 
                 if stop:
                     best_auc = df_run_hists[
-                        lambda x: (x["train/val"] == "val")
+                        lambda x: (x["train/val"] == "test")
                         & (x.epoch == best_epoch)
                         & (x.run == i)
                         & (x.metric == "auc")
@@ -228,9 +222,11 @@ def run_federated_model(
                         "value": best_auc,
                         "best_epoch": best_epoch,
                     }
+                    logging.info(f"Test AUC: {best_auc}")
 
                 # save run hists per client on specific client dataset
                 for client_num, client in enumerate(client_name_list):
+                    # val
                     metrics_val = evaluate_model_for_client_dataset(
                         state, fl_valid_list[client_num]
                     )
@@ -242,13 +238,27 @@ def run_federated_model(
                         run=i,
                         epoch=epoch,
                     )
+                    # test
+                    metrics_test = evaluate_model_for_client_dataset(
+                        state, fl_test_list[client_num]
+                    )
+                    logging.info(f"epoch {epoch}: {client}: test: {metrics_test}")
+                    per_client_df_run_hists[client] = save_metrics_in_df(
+                        per_client_df_run_hists[client],
+                        metrics_test,
+                        mode="test",
+                        run=i,
+                        epoch=epoch,
+                    )
+
                     if stop:
                         best_auc = per_client_df_run_hists[client][
-                            lambda x: (x["train/val"] == "val")
+                            lambda x: (x["train/val"] == "test")
                             & (x.epoch == best_epoch)
                             & (x.run == i)
                             & (x.metric == "auc")
                         ].value.values[0]
+                        logging.info(f"Test AUC for {client}: {best_auc}")
 
                         results_fl[f"run_{i}"][client] = {
                             "metric": "auc",
@@ -295,13 +305,6 @@ def run_federated_model(
             prefix=f"fl_{client}",
         )
     return results_fl
-
-
-#     plot_best_aucs(best_aucs)
-
-
-# def plot_best_aucs(best_aucs):
-#     best_aucs_series = pd.Series(best_aucs)
 
 
 def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20):
@@ -357,6 +360,7 @@ def evaluate_model_for_client_dataset(state, client_dataset):
     )
     keras_model.set_weights(state.model.trainable)
     metrics_list = keras_model.evaluate(client_dataset)
+    # TODO: Change in way that maps from the list of metrics above to the metrics dict below to ensure that AUC is AUC
     metrics = {
         "loss": metrics_list[0],
         "binary_accuracy": metrics_list[1],

@@ -65,6 +65,7 @@ def run_one_model_per_client(
                 monitor="val_" + early_stopping_monitor,
                 patience=early_stopping_patience,
                 mode=mode,
+                restore_best_weights=True,
             )
 
             train, test, valid = per_client_train_test_valid(
@@ -109,16 +110,12 @@ def run_one_model_per_client(
             if f"run_{i}" not in results_one_model_per_client.keys():
                 results_one_model_per_client[f"run_{i}"] = {}
 
-            best_auc = df_run_hists_client_model[
-                lambda x: (x["train/val"] == "val")
-                & (x.epoch == best_epoch)
-                & (x.run == i)
-                & (x.metric == "auc")
-            ].value.values[0]
-
+            # test
+            test_auc = client_model.evaluate(test)[2]
+            logging.info(f"Test AUC: {test_auc}")
             results_one_model_per_client[f"run_{i}"][client] = {
                 "metric": "auc",
-                "value": best_auc,
+                "value": test_auc,
                 "best_epoch": best_epoch,
             }
 
