@@ -92,7 +92,7 @@ def extract_performance_results(results_dict, output_path):
     df_performance.loc["sd"] = df_performance[lambda x: x.index != "mean"].std()
 
     # save short version of dataframe without detailed run performances
-    df_performance_short = df_performance["mean", "sd"]
+    df_performance_short = df_performance.loc[["mean", "sd"]]
 
     # save both version as csv and latex file
 
