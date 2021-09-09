@@ -15,30 +15,33 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
     Returns:
         pandas DataFrame: df containing welfare gains per client and overall
     """
+
+    # unnormed welfare gains are commented out
+
     clients = [x.replace(ompc_prefix, "") for x in df.columns if ompc_prefix in x]
     df_wg = pd.DataFrame(
         columns=clients,
         index=[
-            "WG_AUC_FL",
+            # "WG_AUC_FL",
             "WG_AUC_FL_norm",
-            "WG_AUC_FL_client",
+            # "WG_AUC_FL_client",
             "WG_AUC_FL_client_norm",
         ],
     )
 
     for client in clients:
-        # calc WG AUC FL
-        df_wg.loc["WG_AUC_FL", client] = (
-            df.loc["mean", "FL_overall"] - df.loc["mean", ompc_prefix + client]
-        )
+        # # calc WG AUC FL
+        # df_wg.loc["WG_AUC_FL", client] = (
+        #     df.loc["mean", "FL_overall"] - df.loc["mean", ompc_prefix + client]
+        # )
         # calc WG AUC FL norm
         df_wg.loc["WG_AUC_FL_norm", client] = (
             df.loc["mean", "FL_overall"] - df.loc["mean", ompc_prefix + client]
         ) / df.loc["mean", ompc_prefix + client]
-        # calc WG AUC FL client
-        df_wg.loc["WG_AUC_FL_client", client] = (
-            df.loc["mean", fl_prefix + client] - df.loc["mean", ompc_prefix + client]
-        )
+        # # calc WG AUC FL client
+        # df_wg.loc["WG_AUC_FL_client", client] = (
+        #     df.loc["mean", fl_prefix + client] - df.loc["mean", ompc_prefix + client]
+        # )
         # calc WG AUC FL client norm
         df_wg.loc["WG_AUC_FL_client_norm", client] = (
             df.loc["mean", fl_prefix + client] - df.loc["mean", ompc_prefix + client]
