@@ -52,7 +52,11 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
 
     # save as latex file
     with open(os.path.join(output_path, "welfare_gains.tex"), "w") as tf:
-        tf.write(df_wg.to_latex())
+        tf.write(
+            df_wg.to_latex(
+                caption="AUC welfare gains", label="tab:auc_welfare", position="h"
+            )
+        )
 
     return df_wg
 
@@ -66,6 +70,7 @@ def extract_performance_results(results_dict, output_path):
 
     Returns:
         pandas DataFrame: df containing performance values of current scenario
+        pandas DataFrame: short version of df containing performance values of current scenario (without detailed run performances)
     """
     list_of_results_dfs = []
 
@@ -83,11 +88,33 @@ def extract_performance_results(results_dict, output_path):
     df_performance.loc["mean"] = df_performance.mean()
     df_performance.loc["sd"] = df_performance[lambda x: x.index != "mean"].std()
 
+    # save short version of dataframe without detailed run performances
+    df_performance_short = df_performance["mean", "sd"]
+
+    # save both version as csv and latex file
+
     # save df as csv
     df_performance.to_csv(os.path.join(output_path, "performance.csv"))
 
     # save as latex file
     with open(os.path.join(output_path, "performance.tex"), "w") as tf:
-        tf.write(df_performance.to_latex())
+        tf.write(
+            df_performance.to_latex(
+                caption="AUC performance with runs",
+                label="tab:auc_performance_runs",
+                position="h",
+            )
+        )
 
-    return df_performance
+    # save df as csv
+    df_performance_short.to_csv(os.path.join(output_path, "performance_short.csv"))
+
+    # save as latex file
+    with open(os.path.join(output_path, "performance_short.tex"), "w") as tf:
+        tf.write(
+            df_performance_short.to_latex(
+                caption="AUC performance", label="tab:auc_performance", position="h"
+            )
+        )
+
+    return df_performance, df_performance_short
