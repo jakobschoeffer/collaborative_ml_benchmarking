@@ -53,11 +53,19 @@ def calc_welfare_gains(df, ompc_prefix, fl_prefix, output_path):
     # save df as csv
     df_wg.to_csv(os.path.join(output_path, "welfare_gains.csv"))
 
+    df_wg = pd.read_csv(os.path.join(output_path, "welfare_gains.csv"), index_col=0)
+    df_wg = df_wg.transpose()
+    df_wg = df_wg * 100
+    df_wg.columns = [col + " [%]" for col in df_wg.columns]
+
     # save as latex file
     with open(os.path.join(output_path, "welfare_gains.tex"), "w") as tf:
         tf.write(
             df_wg.to_latex(
-                caption="AUC welfare gains", label="tab:auc_welfare", position="h"
+                caption="AUC welfare gains",
+                label="tab:auc_welfare",
+                position="h",
+                float_format="%.2f",
             )
         )
 
@@ -91,9 +99,6 @@ def extract_performance_results(results_dict, output_path):
     df_performance.loc["mean"] = df_performance.mean()
     df_performance.loc["sd"] = df_performance[lambda x: x.index != "mean"].std()
 
-    # save short version of dataframe without detailed run performances
-    df_performance_short = df_performance.loc[["mean", "sd"]]
-
     # save both version as csv and latex file
 
     # save df as csv
@@ -109,6 +114,14 @@ def extract_performance_results(results_dict, output_path):
             )
         )
 
+    # save short version of dataframe without detailed run performances
+    df_performance_short = df_performance.loc[["mean", "sd"]]
+    df_performance_short = df_performance_short.transpose()
+    df_performance_short = df_performance_short * 100
+    df_performance_short.columns = [
+        col + " [%]" for col in df_performance_short.columns
+    ]
+
     # save df as csv
     df_performance_short.to_csv(os.path.join(output_path, "performance_short.csv"))
 
@@ -116,7 +129,10 @@ def extract_performance_results(results_dict, output_path):
     with open(os.path.join(output_path, "performance_short.tex"), "w") as tf:
         tf.write(
             df_performance_short.to_latex(
-                caption="AUC performance", label="tab:auc_performance", position="h"
+                caption="AUC performance",
+                label="tab:auc_performance",
+                position="h",
+                float_format="%.2f",
             )
         )
 
