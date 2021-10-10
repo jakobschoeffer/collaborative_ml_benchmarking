@@ -45,6 +45,10 @@ def run_federated_model(
     Returns:
         OrderedDict: dict containing results of all runs for this settings
     """
+    cpu_device = tf.config.list_logical_devices("CPU")[0]
+    tff.backends.native.set_local_execution_context(
+        server_tf_device=cpu_device, client_tf_devices=[cpu_device]
+    )
 
     # Data is the same for all reruns of the federated model
     fl_train_list, fl_test_list, fl_valid_list, client_name_list = create_fl_datasets(
@@ -120,6 +124,9 @@ def run_federated_model(
                 client_optimizer_fn=lambda: tf.keras.optimizers.Adam(
                     learning_rate=learning_rate
                 ),
+                # client_optimizer_fn=lambda: tf.keras.optimizers.SGD(
+                #     learning_rate=learning_rate
+                # ),
             )
 
             # nest_asyncio.apply()
@@ -334,13 +341,15 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
     for client_name, client_data_dict in client_dataset_dict.items():
         fl_train = create_tf_dataset(client_data_dict["train"], all_images_path)
         fl_train_list.append(
-            fl_train.shuffle(len(fl_train)).repeat(repeat).batch(batch)
+            fl_train.shuffle(len(fl_train) * 10).repeat(repeat).batch(batch)
         )
         fl_test = create_tf_dataset(client_data_dict["test"], all_images_path)
-        fl_test_list.append(fl_test.shuffle(len(fl_test)).repeat(repeat).batch(batch))
+        fl_test_list.append(
+            fl_test.shuffle(len(fl_test) * 10).repeat(repeat).batch(batch)
+        )
         fl_valid = create_tf_dataset(client_data_dict["valid"], all_images_path)
         fl_valid_list.append(
-            fl_valid.shuffle(len(fl_valid)).repeat(repeat).batch(batch)
+            fl_valid.shuffle(len(fl_valid) * 10).repeat(repeat).batch(batch)
         )
         client_name_list.append(client_name)
 

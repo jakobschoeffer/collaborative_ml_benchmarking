@@ -23,14 +23,14 @@ def run_scenarios(config):
     Args:
         config (Box): config object with project and scenario specifications
     """
-    physical_devices = tf.config.list_physical_devices("GPU")
-    try:
-        tf.config.experimental.set_memory_growth(physical_devices[0], True)
-    except:
-        logging.warn(
-            "Could not set memory growth: Invalid device or cannot modify virtual devices once initialized."
-        )
-        pass
+    # physical_devices = tf.config.list_physical_devices("GPU")
+    # try:
+    #     tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    # except:
+    #     logging.warn(
+    #         "Could not set memory growth: Invalid device or cannot modify virtual devices once initialized."
+    #     )
+    #     pass
 
     # gpus = tf.config.list_physical_devices("GPU")
     # if gpus:
