@@ -45,10 +45,10 @@ def run_federated_model(
     Returns:
         OrderedDict: dict containing results of all runs for this settings
     """
-    cpu_device = tf.config.list_logical_devices("CPU")[0]
-    tff.backends.native.set_local_execution_context(
-        server_tf_device=cpu_device, client_tf_devices=[cpu_device]
-    )
+    # cpu_device = tf.config.list_logical_devices("CPU")[0]
+    # tff.backends.native.set_local_execution_context(
+    #     server_tf_device=cpu_device, client_tf_devices=[cpu_device]
+    # )
 
     # Data is the same for all reruns of the federated model
     fl_train_list, fl_test_list, fl_valid_list, client_name_list = create_fl_datasets(

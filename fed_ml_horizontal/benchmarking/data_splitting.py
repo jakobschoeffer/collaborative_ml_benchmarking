@@ -35,8 +35,8 @@ def check_client_split_dict_valid(client_split_dict):
             for client_spec in client_split_dict.values()
         ]
     )
-    assert (
-        demanded_share_of_pitting_images <= 1
+    assert (demanded_share_of_pitting_images < 1) or math.isclose(
+        demanded_share_of_pitting_images, 1
     ), "Total number of required pitting images in client specification sums up to more than 1. Take action!"
     demanded_share_of_no_pitting_images = sum(
         [
@@ -44,8 +44,8 @@ def check_client_split_dict_valid(client_split_dict):
             for client_spec in client_split_dict.values()
         ]
     )
-    assert (
-        demanded_share_of_no_pitting_images <= 1
+    assert (demanded_share_of_no_pitting_images < 1) or math.isclose(
+        demanded_share_of_no_pitting_images, 1
     ), "Total number of required no_pitting images in client specification sums up to more than 1. Take action!"
 
 

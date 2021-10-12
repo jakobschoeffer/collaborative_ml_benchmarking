@@ -24,7 +24,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.plot(epochs, history["binary_accuracy"])
     plt.plot(epochs, history["val_binary_accuracy"])
     # plt.title("Training and validation accuracy")
-    fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_acc.png"))
+    fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_acc.png"), dpi=600)
 
     fig = plt.figure()
 
@@ -34,7 +34,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.plot(epochs, history["val_loss"])
     # plt.title("Training and validation loss")
     plt.show()
-    fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_loss.png"))
+    fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_loss.png"), dpi=600)
 
 
 def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
@@ -76,7 +76,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             palette=palette,
         )  # .set_title(f"Training and validation {metric} (median)")
         g.get_figure().savefig(
-            os.path.join(output_path, f"{prefix}_{metric}_median.png")
+            os.path.join(output_path, f"{prefix}_{metric}_median.png"), dpi=600)
         )
         plt.close()
 
@@ -94,7 +94,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             ci="sd",
             palette=palette,
         )  # .set_title(f"Training and validation {metric} (mean, sd ci)")
-        fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"))
+        fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"), dpi=600)
         plt.close()
 
 
@@ -172,5 +172,5 @@ def create_boxplots(df, output_path):
     g = sns.boxplot(data=df.loc[lambda x: ["run" in x for x in x.index]])
     g.set_xticklabels(g.get_xticklabels(), rotation=30)
     fig = g.get_figure()
-    fig.savefig(os.path.join(output_path, "performance.png"), bbox_inches="tight")
+    fig.savefig(os.path.join(output_path, "performance.png"), bbox_inches="tight", dpi=600)
     plt.close()
