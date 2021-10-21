@@ -76,8 +76,9 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             palette=palette,
         )  # .set_title(f"Training and validation {metric} (median)")
         g.get_figure().savefig(
-            os.path.join(output_path, f"{prefix}_{metric}_median.png"), dpi=600)
+            os.path.join(output_path, f"{prefix}_{metric}_median.png"), dpi=600
         )
+
         plt.close()
 
     for metric in df_run_hists_agg["metric"].unique():
@@ -94,7 +95,9 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             ci="sd",
             palette=palette,
         )  # .set_title(f"Training and validation {metric} (mean, sd ci)")
-        fig.savefig(os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"), dpi=600)
+        fig.savefig(
+            os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"), dpi=600
+        )
         plt.close()
 
 
@@ -172,5 +175,7 @@ def create_boxplots(df, output_path):
     g = sns.boxplot(data=df.loc[lambda x: ["run" in x for x in x.index]])
     g.set_xticklabels(g.get_xticklabels(), rotation=30)
     fig = g.get_figure()
-    fig.savefig(os.path.join(output_path, "performance.png"), bbox_inches="tight", dpi=600)
+    fig.savefig(
+        os.path.join(output_path, "performance.png"), bbox_inches="tight", dpi=600
+    )
     plt.close()
