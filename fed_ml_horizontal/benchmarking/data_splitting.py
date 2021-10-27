@@ -67,7 +67,7 @@ def make_client_split(
         total_share (int, optional): share of all images that should be used in certain scenario. Defined in config. Defaults to 1.
         test_share (float, optional): test share that should be used in certain scenario. Defined in config. Defaults to 0.2.
         valid_share (float, optional): valid share that should be used in certain scenario. Defined in config. Defaults to 0.05.
-        unified_test_dataset TODO ADD
+        unified_test_dataset (bool): if true, one unified test dataset is used for all clients and settings
 
     Returns:
         dict: dictionary containing filenames of selected total, train, test, valid images (pitting and no_pitting) for each client
@@ -284,7 +284,7 @@ def create_client_dataset_dict(
     specified_args = locals()
     write_specified_args(specified_args, output_dir, "client_dataset_spec.txt")
 
-    check_client_split_dict_valid(client_split_dict)  # TODO CHeck if correct
+    check_client_split_dict_valid(client_split_dict)
     (
         pitting_image_list,
         no_pitting_image_list,

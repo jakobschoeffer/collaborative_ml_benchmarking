@@ -29,6 +29,12 @@ Federated Machine Learning
   - tmp: data is being stored here. only created when running the pipeline
   - outputs: outputs are stored here
   - log: log files are stored here
+- notebooks
+  - boxplot_transformer: adjusts angle of x-axis names if needed for many clients as the plot gets ???
+  - table_table: inverts tex files for paper and thesis (not needed anymore)
+- presentations
+  - final_presentation: final presentation of master's thesis as PowerPoint and pdf
+  - interim_presentation: interim presentation of master's thesis as pdf
 
 
 ## Project Setup

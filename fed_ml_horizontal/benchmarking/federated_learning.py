@@ -41,6 +41,7 @@ def run_federated_model(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
+        unified_test_dataset (bool): if true, one unified test dataset is used for all clients and settings
 
     Returns:
         OrderedDict: dict containing results of all runs for this settings
@@ -91,7 +92,7 @@ def run_federated_model(
                 fl_test_list (list): lists of test datasets of all clients
                 fl_valid_list (list): lists of validation datasets of all clients
                 client_name_list (list): list of all client names
-                unified_test_dataset # TODO add
+                unified_test_dataset (bool): if true, one unified test dataset is used for all clients and settings
 
             Returns:
                 pandas DataFrame: df containing values of defined metrics for train/val over runs and epochs
@@ -99,7 +100,6 @@ def run_federated_model(
                 OrderedDict: dict containing results of all runs for this settings
             """
             logging.info(f"Start run {i} out of {num_reruns} runs")
-            # TODO: Move to federated_learning.py challenge: input_spec has to be handed over to model_fn
 
             def model_fn():
                 """Runs tensorflow federated model.
@@ -327,7 +327,7 @@ def create_fl_datasets(client_dataset_dict, all_images_path, repeat=1, batch=20)
     Args:
         client_dataset_dict (dict): dictionary containing filenames of selected total, train, test, valid images (pitting and no_pitting) for each client
         all_images_path (str): path to saved images
-        repeat (int, optional): TODO what's that exactly?. Defaults to 1.
+        repeat (int, optional): repeat for batch creation. Defaults to 1.
         batch (int, optional): batch size. Defaults to 20.
 
     Returns:
@@ -369,14 +369,13 @@ def evaluate_model_for_client_dataset(state, client_dataset):
     keras_model = create_my_model()
     keras_model.compile(
         loss=tf.keras.losses.BinaryCrossentropy(),
-        metrics=[
+        metrics=[  # DONT CHANGE ORDER OF METRICS! BinAcc first, AUC second! Other metrics can be appended, but not prepended!
             tf.keras.metrics.BinaryAccuracy(),
             tf.keras.metrics.AUC(name="auc"),
         ],
     )
     keras_model.set_weights(state.model.trainable)
     metrics_list = keras_model.evaluate(client_dataset)
-    # TODO: Change in way that maps from the list of metrics above to the metrics dict below to ensure that AUC is AUC
     metrics = {
         "loss": metrics_list[0],
         "binary_accuracy": metrics_list[1],

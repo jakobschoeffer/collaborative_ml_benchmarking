@@ -23,27 +23,6 @@ def run_scenarios(config):
     Args:
         config (Box): config object with project and scenario specifications
     """
-    # physical_devices = tf.config.list_physical_devices("GPU")
-    # try:
-    #     tf.config.experimental.set_memory_growth(physical_devices[0], True)
-    # except:
-    #     logging.warn(
-    #         "Could not set memory growth: Invalid device or cannot modify virtual devices once initialized."
-    #     )
-    #     pass
-
-    # gpus = tf.config.list_physical_devices("GPU")
-    # if gpus:
-    #     # Restrict TensorFlow to only allocate 1GB of memory on the first GPU
-    #     try:
-    #         tf.config.set_logical_device_configuration(
-    #             gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=1500)]
-    #         )
-    #         logical_gpus = tf.config.list_logical_devices("GPU")
-    #         print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-    #     except RuntimeError as e:
-    #         # Virtual devices must be set before GPUs have been initialized
-    #         print(e)
 
     current_datetime = time.strftime("%Y%m%d-%H%M%S")
     output_path_for_session = os.path.join(

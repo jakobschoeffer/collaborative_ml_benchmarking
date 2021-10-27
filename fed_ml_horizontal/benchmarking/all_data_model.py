@@ -75,7 +75,7 @@ def run_all_data_model(
         all_data_model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),  # "Adam"
             loss=tf.keras.losses.BinaryCrossentropy(),
-            metrics=[  # DONT CHANGE THE ORDER!
+            metrics=[  # DONT CHANGE ORDER OF METRICS! BinAcc first, AUC second! Other metrics can be appended, but not prepended!
                 tf.keras.metrics.BinaryAccuracy(),
                 tf.keras.metrics.AUC(name="auc"),
             ],
