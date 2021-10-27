@@ -41,3 +41,6 @@ def download_and_unzip(data_url: str, data_path: str):
     zip_ref.extractall(data_path)
     zip_ref.close()
     logging.info(f"Downloaded and unzipped data from {data_url} to {data_path}")
+    logging.info(
+        "From now on, the data is stored in the tmp folder and the fed_ml_horizontal.etl.load_data.load_data step can be commented out in config/project.yml"
+    )

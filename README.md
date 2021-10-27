@@ -1,40 +1,43 @@
-# collaborative_ml_benchmarking
-Federated Machine Learning
+# Untapping Analytical Synergies in Industrial SME Ecosystems: An Empirical Evaluation of Federated Machine Learning
+Master's thesis on collaborative machine learning by Anna Hensel.
 
 ## Usage
+- please read this README carefully
+- start setting up the project as described in Project Setup.
+- see File Contents for an overview over the project
 - you will want to run fed_ml_horizontal.pipeline.run_pipeline
   - if you are using VSCode, the needed launch specification is included in the repo in .vscode/launch.json. Simply click on "Run and Debug" in the side bar left and on the "play" button on top to run the pipeline in debug mode.
-- after running it once, you don't want to redownload the data. Hence, you can comment out the first step in fed_ml_horizontal/config/project.yml
-- scenarios for the benchmarking are specified in fed_ml_horizontal/config/scenarios.yml. You can remove and add scenarios here.
-
-## Issues
-- currently, we are being kicked out from the server when using too many resources. Hence, number of epochs, number of runs etc. is set to a minimum.
-- GPU does not work yet.
+  - debug mode is slow, for running the code in the background in the server, run "poetry shell" followed by "nohup python -m fed_ml_horizontal.pipeline.run_pipeline &" in the command line
+- after running the code once, you don't want to redownload the data. Hence, you can comment out the first step in fed_ml_horizontal/config/project.yml
+- scenarios for the benchmarking are specified in fed_ml_horizontal/config/scenarios.yml. You can remove and add scenarios here. An excel file for creating nice scenario specifications easily is provided in tesis/share_...
+- in case you want to use a unified test data set over all clients and settings, choose "unified_test_dataset: true" in the project.yml in the config file
 
 ## File Contents
 - fed_ml_horizontal: all code for horizontal federated learning benchmark
-  - config: configuration for pipeline (whole project), steps and scenarios
-  - pipeline: code to run pipeline steps
-  - etl.load_data: code for loading data
   - benchmarking: benchmarking code
-    - run_scenarios: code for executing the benchmarking steps
+    - all_data_model: all data model
     - data_splitting: code for splitting up data for simulating clients
-    - tf_utils: code for creating tensorflow datasets
-    - plotting: plotting and saving figs and csvs
-    - model: contains the tensorflow model that is used in all scenarios and settings
     - federated_learning: federated learning
-    - baseline_model: baseline model
+    - model: contains the tensorflow model that is used in all scenarios and settings
     - one_model_per_client: one model per client
-  - utils: utils for setting up logging and reading config
+    - plotting: plotting and saving figs and csvs
+    - run_scenarios: code for executing the benchmarking steps
+    - summaries: code for calculating and exporting summaries such as performance and welfare gains
+    - tf_utils: code for creating tensorflow datasets
+  - config: configuration for pipeline (whole project), steps and scenarios
+  - etl.load_data: code for loading data
+  - log: automatically created for logging
+  - outputs: automatically created for outputs. Outputs are stored here.
+  - pipeline: code to run pipeline steps
   - tmp: data is being stored here. only created when running the pipeline
-  - outputs: outputs are stored here
-  - log: log files are stored here
+  - util: utils for setting up logging and reading config
 - notebooks
-  - boxplot_transformer: adjusts angle of x-axis names if needed for many clients as the plot gets ???
-  - table_table: inverts tex files for paper and thesis (not needed anymore)
+  - boxplot_transformer: adjusts angle of x-axis ticks after plot was created
+  - table_transformer: transposes csvs and creates tex files for thesis (included in normal code, just for old csvs)
 - presentations
   - final_presentation: final presentation of master's thesis as PowerPoint and pdf
   - interim_presentation: interim presentation of master's thesis as pdf
+- thesis: tex code, excel file for share calculation, thesis pdf
 
 
 ## Project Setup
