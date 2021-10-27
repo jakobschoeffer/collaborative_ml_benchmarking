@@ -76,9 +76,7 @@ def run_one_model_per_client(
             )
             client_model = create_my_model()
             client_model.compile(
-                optimizer=tf.keras.optimizers.Adam(
-                    learning_rate=learning_rate
-                ),  # "Adam"
+                optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                 loss=tf.keras.losses.BinaryCrossentropy(),
                 metrics=[
                     tf.keras.metrics.BinaryAccuracy(),

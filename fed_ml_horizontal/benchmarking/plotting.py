@@ -23,7 +23,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.ylim(bottom=0.7, top=1)
     plt.plot(epochs, history["binary_accuracy"])
     plt.plot(epochs, history["val_binary_accuracy"])
-    # plt.title("Training and validation accuracy")
+    # plt.title("Training and validation accuracy") # plots without title for paper and thesis
     fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_acc.png"), dpi=600)
 
     fig = plt.figure()
@@ -32,7 +32,7 @@ def plot_metrics_hist(history, plotname_prefix, output_dir):
     plt.ylim(bottom=0, top=0.5)
     plt.plot(epochs, history["loss"])
     plt.plot(epochs, history["val_loss"])
-    # plt.title("Training and validation loss")
+    # plt.title("Training and validation loss") # plots without title for paper and thesis
     plt.show()
     fig.savefig(os.path.join(output_dir, f"{plotname_prefix}_loss.png"), dpi=600)
 
@@ -61,7 +61,6 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
         # "test": sns.color_palette()[2],
     }
 
-    # TODO: Add quantiles as "confidence intervals"
     for metric in df_run_hists_agg["metric"].unique():
         plt.figure()
         if metric not in ["loss"]:
@@ -74,7 +73,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             y="median",
             hue="train/val",
             palette=palette,
-        )  # .set_title(f"Training and validation {metric} (median)")
+        )  # .set_title(f"Training and validation {metric} (median)") # plots without title for paper and thesis
         g.get_figure().savefig(
             os.path.join(output_path, f"{prefix}_{metric}_median.png"), dpi=600
         )
@@ -94,7 +93,7 @@ def aggregate_and_plot_hists(df_run_hists, output_path, prefix):
             hue="train/val",
             ci="sd",
             palette=palette,
-        )  # .set_title(f"Training and validation {metric} (mean, sd ci)")
+        )  # .set_title(f"Training and validation {metric} (mean, sd ci)") # plots without title for paper and thesis
         fig.savefig(
             os.path.join(output_path, f"{prefix}_{metric}_mean_sd.png"), dpi=600
         )

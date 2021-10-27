@@ -36,7 +36,7 @@ def run_all_data_model(
         learning_rate (float): learning rate for optimizer specified in config object
         early_stopping_patience (int): number of epochs with no improvement after which training will be stopped specified in config object
         early_stopping_monitor (str): quantity to be monitored specified in config object
-        unified_test_dataset TODO Add
+        unified_test_dataset (bool): if true, one unified test dataset is used for all clients and settings
     Returns:
         OrderedDict: dict containing results of all runs for this settings
     """
