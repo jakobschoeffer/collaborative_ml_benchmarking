@@ -1,0 +1,50 @@
+\section{Introduction\label{sec:introduction}}
+% Anführungszeichen `` ''
+Small and medium-sized enterprises (SMEs) play a central and distinct role for economies all over the world \citep{lukacs2005economic}.
+%
+Especially in Germany, where SMEs account for over half of the economic output, they are a vital driver for innovation and technology \citep{bmwi2020mittelstand}.
+%
+Currently, SMEs are facing major challenges concerning digitalization and the use of machine learning (ML), failing to unlock their potential.
+%
+Recent research using data from the Leibniz Centre for European Economic Research collected in 2019 reveals that less than 5\% of German SMEs (up to annual revenue of \euro 50 million) have applied artificial intelligence (AI) technologies in their business models so far, which stands in strong contrast to over one third of giant corporations (annual revenue larger than \euro 1 billion) having applied AI technologies \citep{hbr2021midsizeAI}.
+%
+Regarding the use of ML, for example for predictive maintenance and automation, SMEs often encounter two major issues.
+
+Firstly, SMEs often lack the required knowledge and specialists for ML and AI.
+% https://www.ipsos.com/sites/default/files/ct/publication/documents/2020-09/european-enterprise-survey-and-ai-executive-summary.pdf page 7:
+% As a result, the two leading barriers that
+% enterprises face are characterised as AI skills needs (lack of skills amongst existing staff
+% 45%, difficulties hiring new staff with the right skills 57%) and the cost of implementation
+% (cost of adoption 52%, cost of adapting operational processes 49%, lack of
+% external/public funding 36%). The skills barrier is especially important given that it is not
+% primarily related to size or sector but rather all enterprises compete in the same labour
+% market and therefore face skills shortages.
+A study by the European Commission finds that throughout all European companies, not only SMEs, the lack of AI skills needed resulting from a lack of skills amongst existing staff and difficulties hiring new staff with the right skills are the main barriers concerning the use and implementation of AI \citep{europeancommission2020AI}. We expect this barrier to be even more pronounced for SMEs than for the market in total, as SMEs were found to be less attractive to highly skilled candidates than large technology corporations, start-ups, and large non-technical corporations \citep{hbr2021midsizeAI}.
+
+%
+Secondly, SMEs often do not have enough data to train ML models, leading to deficient performance \citep{hbr2021midsizeAI, eco2021kmu}.
+To solve the data issues, clearly, for security and privacy reasons, it is not an option for companies in general to simply combine their data to train a model on this joint database.
+
+%
+Hence, the often desired ML workflow of company-internal employees training a model on company data is often not viable for SMEs.
+%
+These problems are more prominent for SMEs than for larger players, which usually generate more data and can afford specialized teams to make use of it \citep{hbr2021midsizeAI, eco2021kmu}.
+
+The Service-Meister research project\footnote{https://www.servicemeister.org/en/} driven by a large number of German research institutions and industry partners and funded with over 8 million euros is a joint effort to tackle the aforementioned challenges to make AI and ML accessible for the German SME economy. To overcome the huge barriers associated with the use of AI and ML among SMEs such as the lack of skilled employees and data, the project, i.a., targets exploring and evaluating collaborative ML approaches. One of these approaches for collaborative ML is the novel technology called \emph{federated learning} (FL), first introduced by \citet{mcmahan2017communication}.
+
+SMEs with similar ML use cases, each facing the issues mentioned above concerning the use of ML, could potentially overcome these issues using FL. FL is a collaborative ML approach that enables distributed optimization with the goal of jointly training a model without sharing training data \citep{mcmahan2017communication}. A prominent use case is the next-word prediction for text messages in a mobile device setting. A large number of smartphone users locally train a model on their private data. After a certain number of iterations, each smartphone sends the trained parameters to the central node, which aggregates them and sends the aggregated parameters back to the smartphones \citep{mcmahan2017communication, bonawitz2017practical, hard2018federated}. FL enables the joint use of data from several clients, in our case SMEs, unlocking performance potential. Local training and weight sharing preserve privacy. However, communication between the server and the clients is required due to the distributed model training, which could be expensive \citep{li2020federated} and increase the complexity of the whole training process \citep{mcmahan2017communication}.
+
+% FL exhibits the potential to tackle the aforementioned problems: the lack of knowledge and the lack of data. Firstly, the SMEs could join forces and install one joint team for the modeling and training. Secondly, the lack of data could be overcome while preserving privacy.
+%
+
+We identify three key dimensions for evaluating FL in the SME context: \emph{performance}, \emph{privacy}, and \emph{complexity}. The three dimensions are prominent in both, the FL literature (e.g., \citet{mcmahan2017communication}, \citet{konevcny2016federated}, \citet{yang2019federated}) and the literature on the needs of SMEs in the AI context (e.g., \citet{hbr2021midsizeAI}, \citet{bmwi2020mittelstand}, \citet{eco2021kmu}). On the one hand, we have the FL literature taking the following perspective on the three dimensions: Concerning \emph{performance}, the focus lies on exploring different architectures, setups, and their behavior over time, especially in comparison to non-distributed learning approaches. Concerning \emph{privacy}, how and to what extent can private information from a specific client or any client be reconstructed or inferred through adversarial attacks, and what defense measures can be applied? Concerning \emph{complexity}, the main focus lies on computational complexity and the question of convergence speed, potential bottlenecks, and techniques to speed up computation and communication. In contrast, on the other hand, based on the literature on SME needs in the context of ML, we can derive the following -- in general more applied -- perspective on the three dimensions: Concerning \emph{performance}, can SMEs expect a performance increase in comparison to training their model solely on their own data? Concerning \emph{privacy}, does the SMEs' data stay private, how can it be protected, and what has to be considered when forming the federation? Finally, concerning \emph{complexity}, do SMEs have the required expertise and additionally, how much effort is needed for organizational and implementation aspects?
+
+Hence, to provide guidance for SMEs in deciding whether FL is a possible approach to address their challenges, we evaluate the dimensions in the following way:
+Regarding the \emph{performance} dimension, we investigate the potential concerning model performance lying in FL. % how the performance of individual models changes for SMEs participating in a federated setting.
+Regarding the \emph{privacy} dimension, we analyze the privacy implications for SMEs when participating in an FL setting and investigate whether the privacy offered by FL is adequate. For \emph{complexity}, we examine what types of complexity SMEs encounter when applying FL and whether the effort is manageable.
+
+Our contribution is the following. We present the topic of FL from an SME perspective in an industrial context, which is fundamentally different from the common FL use cases. We provide guidance for SMEs in deciding whether to use FL as an approach to overcome their knowledge and data issues and what considerations should be made.
+From an SME perspective, we qualitatively and quantitatively investigate the relevant dimensions \emph{performance}, \emph{privacy}, and \emph{complexity}. We provide a simulation pipeline that lets us assess the effect of taking part in FL regarding the model performance in realistic scenarios. In summary, we analyze under which conditions FL is viable and useful in an industrial context. % provide decision support for SMEs whether certain challenges could be solved with FL
+
+The rest of this thesis is organized as follows. The following section contains a brief review of the literature. Section \ref{sec:methodology} describes the methodology of the dimension analysis and the dataset, algorithm, performance measure, and study setup for the \emph{performance} analysis. The results for each dimension are presented and discussed in section \ref{sec:results_and_discussion}, starting with \emph{performance}, followed by \emph{privacy} and \emph{complexity}. Finally, section \ref{sec:summary} summarizes the results regarding the three dimensions, provides a combined % / conclusive
+assessment of FL for SMEs, and concludes the thesis.

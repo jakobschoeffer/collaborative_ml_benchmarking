@@ -1,0 +1,174 @@
+%gibt an: Papierformat, Schriftgröße
+\documentclass[a4paper,english,12pt]{article}
+\setlength{\parskip}{0.2cm}
+\setlength{\parindent}{0cm}
+%-----------------------------------------------------------------------------------------------------------------------------
+%Übersetzung von E in D
+\usepackage[english]{babel} %changed to English
+%Einstellung der Randabstände
+\usepackage[lmargin={3.5cm},rmargin={2.5cm},tmargin={2.5cm},bmargin={2cm}]{geometry}
+%zur Einbindung von Graphiken
+\usepackage{graphicx}
+%Bearbeitung von Kopf- und Fusszeile
+\usepackage{fancyhdr}
+%Schriftart
+\usepackage{helvet}
+%stellt unabhängige Textmarken zu Verfügung
+\usepackage{extramarks}
+%aktiviert eine Umgebung in der der Mathematikmodus aktiv ist
+\usepackage{amsmath}
+%aktiviert eine Umgebung in der der Mathematikmodus aktiv ist
+\usepackage{amsthm}
+%aktiviert eine Umgebung in der der Mathematikmodus aktiv ist
+\usepackage{amssymb}
+%aktiviert Hyperlinks
+\usepackage{hyperref}
+%Stellt das Eurozeichen  zu Verfügung
+\usepackage[right]{eurosym}
+%Übersetzt die Tastatureingaben für LaTex
+\usepackage[latin1,utf8]{inputenc}
+\usepackage{fancybox}
+\usepackage[dvipsnames]{xcolor} %more pre-defined colors
+\usepackage{color}
+\usepackage{colortbl} %colors in tables for horizontal and vertical lines
+\definecolor{myorange}{RGB}{247,150,0} %colors from ppt graphics for uniform coloring
+\definecolor{mygreen}{RGB}{0,150,130} %KIT green/blue
+\definecolor{myred}{RGB}{192,80,77}
+\definecolor{myblue}{RGB}{79,129,189}
+\usepackage{float}
+\usepackage{framed}
+\usepackage{url}
+\usepackage{verbatim} %multi-line comments
+\usepackage[titles]{tocloft} %toc design
+
+% \usepackage[utf8]{inputenc}
+
+% \usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{natbib}
+
+\usepackage{booktabs}
+\usepackage{tabularx} %Tabellen, die sich der Seitenbreite anpassen
+
+\usepackage{multirow} % Verbundene Zellen in Tabellen
+\usepackage{rotating} % Quergestellte Tabellen
+\usepackage{rotfloat}
+
+\usepackage[bottom]{footmisc} %Fußnoten immer am Ende der Seite
+\usepackage{tikz} %for graphics, eg trees
+\usepackage{tcolorbox} %color for graphics
+\usepackage{pgfkeys}
+\usepackage{multicol} %multi-column
+\usepackage{colortbl} % colour of table lines
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx} %layout for algorithms
+\usepackage{xfrac} %layout for fractions
+
+%%% MY PACKAGES
+\usepackage{lineno,hyperref}
+\usepackage{booktabs} % for loading .txt files into this document
+\usepackage{amsmath}
+\usepackage{eurosym} % for the euro sign
+\modulolinenumbers[5]
+% \usepackage[disable]{todonotes} % for hiding the todo notes
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
+\usepackage{graphicx} % für bullet points?
+
+%%%
+%Definitionen
+\newtheoremstyle{mystyle}% name
+{10pt}% Space above
+{10pt}% Space below
+{\itshape}% Body font
+{}% Indent amount:
+{\bfseries}% Theorem head font
+{:}% Punctuation after theorem head
+{0.5em}% Space after theorem head
+{\thmname{#1}\thmnumber{ #2}:\thmnote{ #3}}% Theorem head
+
+\theoremstyle{mystyle}% default
+\newtheorem{definition}{Definition}
+\numberwithin{equation}{section}
+\renewcommand{\proofname}{Beweis}
+
+
+%Paragraphen
+
+\newcommand{\myparagraph}[1]{\paragraph{}\mbox{}\\}
+
+
+%-----------------------------------------------------------------------------------------------------------------------------------------
+\renewcommand{\baselinestretch}{1.24}
+\fancyhead[LO]{\slshape \small \firstleftmark}
+\fancyhead[RO]{\normalsize\thepage} \fancyfoot{}
+\begin{document}
+%-----------------------------------------------------------------------------------------------------------------------------------------
+%Titelseite
+\include{Titlepage}
+
+\thispagestyle{empty}\cleardoublepage
+
+\mbox{}\thispagestyle{empty}
+\cleardoublepage
+
+\include{Declaration}
+
+\thispagestyle{empty}\cleardoublepage
+
+\include{Abstract}
+
+\mbox{}\thispagestyle{empty}
+\cleardoublepage
+\rmfamily \pagestyle{fancy} \setcounter{secnumdepth}{4}
+
+
+\pagenumbering{roman}
+\setcounter{page}{4}
+\setlength\cftparskip{-5pt}
+\setlength\cftbeforesecskip{-1pt}
+\setlength\cftaftertoctitleskip{-10pt}
+\tableofcontents
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{Acronyms} %include in toc w/o numbering
+
+\include{Acronyms}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{List of Figures} %include in toc w/o numbering
+\listoffigures
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{section}{List of Tables} %include in toc w/o numbering
+\listoftables
+\cleardoublepage
+
+\setcounter{page}{2} \pagenumbering{arabic}
+
+\interfootnotelinepenalty=10000 % Keine Seitenumbrüche bei Fußnoten
+
+ % % % % % % % % % % % % %INHALTE % % % % % % % % % % % % % %
+
+\include{Introduction}
+
+\include{RelatedWork}
+
+\include{Methodology}
+
+\include{ResultsDiscussion}
+
+\include{SummaryConclusion}
+
+% % % % % % % % % % % % % ANHANG% % % % % % % % % % % % % % % %
+
+\appendix
+\include{Appendix}
+
+% % % % % % % % % % % % % LITERATUR% % % % % % % % % % % % % % %
+%\phantomsection
+\renewcommand\bibname{References}
+\bibliographystyle{apalike}
+%\bibliographystyle{elsarticle-num}
+\bibliography{mybibfile}
+\end{document}
