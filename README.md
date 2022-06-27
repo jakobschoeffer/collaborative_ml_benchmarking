@@ -1,5 +1,4 @@
 # Untapping Analytical Synergies in Industrial SME Ecosystems: An Empirical Evaluation of Federated Machine Learning
-Master's thesis on collaborative machine learning by Anna Hensel.
 
 ## Usage
 - please read this README carefully
